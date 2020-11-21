@@ -17,7 +17,7 @@
             ref="observer"
             v-slot="{ invalid }"
           >
-          <form @submit.prevent="submit">
+          <v-form ref="form" @submit.prevent="submit">
           <v-container>
             <v-row>
                   <v-col cols="12">
@@ -258,7 +258,7 @@ is true and correct.
           Submit
           </v-btn>
         </v-card-actions>
-        </form>
+        </v-form>
    </validation-observer>
   </v-card-text>
       </v-card>
@@ -342,6 +342,13 @@ extend('required', {
        this.$refs.observer.validate();
         Api().post("/create",this.form)
         .then((response) => {
+          this.loading = false;
+          //close form
+          this.$store.commit('SET_REPORT_DIALOG',false)
+          this.$refs.form.reset()
+
+
+          //show success
           this.$store.commit('SET_SUCCESS_DIALOG',{
           content:response.data.reference_number,
           message:'Your report has been submmited for review and approval. Save this reference number to track your report.',
@@ -349,9 +356,6 @@ extend('required', {
           title:'Success'
         });
         })
-           this.loading = false;
-           this.$store.commit('SET_REPORT_DIALOG',false)
-            this.$refs.observer.clear();
      },
      		formatDate(date) {
 			if (!date) return null;

@@ -5,12 +5,12 @@
     <v-snackbar
       v-model="$store.getters.getSnack.visible"
       right
+      :timeout="$store.getters.getSnack.timeout"
     >
       {{$store.getters.getSnack.content }}
 
       <template v-slot:action="{ attrs }">
         <v-btn
-          color="pink"
           text
           v-bind="attrs"
           @click="$store.state.snackBar.visible = false">

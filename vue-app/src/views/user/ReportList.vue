@@ -46,8 +46,6 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-
-
                 <v-icon
                 small
                 class="mr-2"
@@ -86,6 +84,7 @@
 import Report from '../../apis/Report';
 import EditReport from '../../components/EditReport.vue';
 import SnackBar from '../../components/SnackBar.vue';
+import vue from 'vue';
 export default {
   data () {
       return {
@@ -111,16 +110,16 @@ export default {
       editedIndex: -1,
       editedItem: {
         date: '',
-        reference_number: 0,
-        type: 0,
-        status: 0,
-        id:0
+        reference_number: "",
+        type: "",
+        status: "",
+        id:""
       },
       defaultItem: {
         date: '',
-        reference_number: 0,
-        type: 0,
-        status: 0,
+        reference_number: "",
+        type: "",
+        status: "",
         id:0
       },
       }
@@ -134,7 +133,7 @@ export default {
                 this.reports = [...this.reports, {
                 id:report.id,
                 date: report.date,
-                reference_number: report.reference_number,
+                reference_number: report.reference_number.toUpperCase(),
                 type: report.type.type,
                 status: report.status,
                 }]
@@ -169,19 +168,12 @@ export default {
        deleteItemConfirm () {
         Report.delete(this.reports[this.editedIndex].id)
         .then((res)=>{
-            if(res.data.deleted){
+                this.fetchReports();
                 this.$store.commit('SET_SNACK_BAR',{
                     visible:true,
-                    content:"Item deleted"
+                    content:"Item deleted",
+                    timeout:2000
                 })
-                this.fetchReports();
-            }else{
-            this.$store.commit('SET_SNACK_BAR',{
-            visible:true,
-            content:"Sorry, could not delete item."
-                })
-            }
-
         })
         this.closeDelete()
       },

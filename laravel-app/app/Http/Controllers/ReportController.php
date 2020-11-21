@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendReference;
 use Illuminate\Http\Request;
 use App\Report;
 use App\ReportType;
 use App\Witness;
-use Auth;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+
 class ReportController extends Controller
 {
 
@@ -31,10 +33,11 @@ class ReportController extends Controller
           $report->date = $data['date'];
           $report->user_id = auth()->user()->id;
           //add reference number
-             $ref_num = 0;
-              $last =  Report::orderBy('created_at','DESC')->first()->id ?? 0;
-              $ref_num = str_pad($last + 1, 4, "0", STR_PAD_LEFT);
-              $report->reference_number = $ref_num;
+             $ref_num = $this->unique_id(6);
+             while(Report::where('reference_number',$ref_num)->count() > 0){
+                  $ref_num = $this->unique_id(6);
+             }
+            $report->reference_number = $ref_num;
           if($report->save()){
               //add location
               $report->address()->create([
@@ -48,11 +51,25 @@ class ReportController extends Controller
                      "phone"=>$data['witnesses'][0]['phone'],
                 ]);
               }
+
+              //email reference number
+              $this->emailReferenceNumber($ref_num);
           }
           return response(['reference_number'=>$ref_num]);
     }
 
+    //generate unique reference number
+   public function unique_id($l = 8) {
+    return substr(md5(uniqid(mt_rand(), true)), 0, $l);
+}
 
+public function emailReferenceNumber($ref){
+    $data = [
+     "to" =>auth()->user()->email,
+     "reference_number"=>strtoupper($ref)
+    ];
+     Mail::send(new SendReference($data)); //mail handler
+}
 
   public function update(Request $request, $id){
            $data = $this->validate($request,[

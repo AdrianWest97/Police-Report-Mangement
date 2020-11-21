@@ -16,7 +16,7 @@ export default new Vuex.Store({
           visible:false,
           content:"",
           message:"",
-          title:"",
+        title: "",
         },
     reportTypes: [],
         parishes:[
@@ -42,7 +42,8 @@ export default new Vuex.Store({
         },
          snackBar:{
         visible:false,
-        content:""
+           content: "",
+        timeout:2000
         },
   },
 
@@ -92,13 +93,15 @@ export default new Vuex.Store({
         content: data.content,
         message: data.message,
         title: data.title,
-        visible:data.visible
+        visible: data.visible,
       }
     },
     SET_SNACK_BAR(state, data) {
       state.snackBar = {
         visible: data.visible,
-        content:data.content
+        content: data.content,
+        timeout: data.timeout
+
       }
     },
     SET_EDIT_REPORT_DIALOG(state, data) {
