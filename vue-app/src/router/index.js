@@ -3,13 +3,23 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-import Dashboard from '../views/Dashboard.vue'
+import Dashboard from '../views/admin/Dashboard.vue'
 import userDashboard from '../views/user/report.vue'
 import userReports from '../views/user/ReportList.vue'
+import PendingReports from '../views/admin/PedingReports.vue'
+import ActiveUsers from '../views/admin/ActiveUsers.vue'
+import axios from "axios";
+import User from '../apis/User'
+import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/notFound',
+    name: 'NotFound',
+    component:NotFound
+  },
   {
     path: '/',
     name: 'Home',
@@ -27,11 +37,25 @@ const routes = [
     component: Register,
     meta: { guestOnly: true }
   },
+
   {
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { authOnly: true }
+    meta: { authOnly: true },
+    beforeEnter: checkAdminRights,
+    children: [
+      {
+        path: 'pending-reports',
+        name: 'Pending Reports',
+        component:PendingReports
+      },
+          {
+        path: 'active-users',
+        name: 'Active Users',
+        component:ActiveUsers
+      }
+    ]
   },
 
   {
@@ -45,9 +69,11 @@ const routes = [
         name: 'My Reports',
         component: userReports,
         meta:{breadCrumb:'My-reports'}
-      }
+      },
+
     ]
   }
+
 
 ]
 
@@ -61,7 +87,47 @@ function isLoggedIn () {
   return localStorage.getItem('token')
 }
 
+function checkAdminRights(to, from, next) {
+    // check if the user is admin
+  User.auth()
+    .then((res) => {
+      if (res.data.is_admin) {
+        next()
+      } else {
+          next({path:'/NotFound'});
+      }
+    });
+}
+
 router.beforeEach((to, from, next) => {
+Vue.config.productionTip = false;
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response.status === 422) {
+      store.commit("setErrors", error.response.data.errors);
+    } else if (error.response.status === 401) {
+      this.$store.commit('LOGIN', true)
+      store.commit("AUTH_USER", null);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
+
+axios.interceptors.request.use(function(config) {
+  config.headers.common = {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  };
+
+  return config;
+});
+
+
   if (to.matched.some(record => record.meta.authOnly)) {
     // this route requires auth, check if logged in
     // if not, redirect to login page.

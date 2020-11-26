@@ -18,11 +18,12 @@
       >
          <v-text-field
           v-model="form.email"
-          outlined
+         filled
           :error-messages="errors"
           label="Enter your email"
           required
           rounded
+           dense
         ></v-text-field>
       </validation-provider>
       <validation-provider
@@ -36,8 +37,9 @@
             :type="show ? 'text' : 'password'"
             :error-messages="errors"
             name="password"
-            outlined
+           filled
             rounded
+            dense
             label="Enter your password"
              @click:append="show = !show"
           ></v-text-field>
@@ -106,14 +108,25 @@ export default {
         .then(response => {
           this.$store.commit('LOGIN', true)
           localStorage.setItem('token', response.data)
-          this.$router.push({ name: 'Home' })
+          this.checkAdminRights();
         })
         .catch(error => {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors
           }
         })
-    }
+    },
+    checkAdminRights(to, from, next) {
+    // check if the user is admin
+  User.auth()
+    .then((res) => {
+      if (res.data.is_admin) {
+    this.$router.push({ name: 'Dashboard' })
+      } else {
+    this.$router.push({ name: 'Home' })
+      }
+    });
+}
   },
   components:{
      ValidationProvider,

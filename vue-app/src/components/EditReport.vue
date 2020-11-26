@@ -25,7 +25,7 @@
             ref="observer"
             v-slot="{ invalid }"
           >
-          <form @submit.prevent="submit">
+          <form @submit.prevent="submit" ref="form">
           <v-container>
             <v-row>
                   <v-col cols="12">
@@ -353,12 +353,15 @@ extend('required', {
 			return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
         },
 
-          closeDialog(){
+      closeDialog(){
+       this.loading = false;
+      this.$refs.form.reset()
+       this.$refs.observer.reset()
           this.$store.commit('SET_EDIT_REPORT_DIALOG',{
           report:null,
           visible:false
         })
-          }
+     },
 
 
    },

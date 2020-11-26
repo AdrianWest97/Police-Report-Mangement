@@ -1,0 +1,135 @@
+<template>
+  <nav>
+    <v-toolbar flat>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title class="text-uppercase grey--text">
+        <span class="font-weight-light">Report Management</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn text color="grey">
+        <span>Sign Out</span>
+        <v-icon right>mdi-logout</v-icon>
+      </v-btn>
+    </v-toolbar>
+    <v-navigation-drawer
+     v-model="drawer"
+      app
+      class=""
+    >
+            <v-list>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <router-link  class="grey--text" :to="item.route">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </router-link>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+     <div class="container-fluid grey lighten-4 h-screen">
+     <v-row v-if="$route.path === '/dashboard'">
+     <card v-for="card in cards" :key="card.text" :text="card.text" :icon="card.icon" :value="card.value">
+     </card>
+          <v-col cols="12" sm="3">
+              <v-sheet
+              rounded="lg"
+              min-height="50"
+            >
+           <chart-by-type></chart-by-type>
+            </v-sheet>
+          </v-col>
+                <v-col cols="12" sm="9">
+              <v-sheet
+              rounded="lg"
+              min-height="50"
+            >
+               <chart-by-parish></chart-by-parish>
+            </v-sheet>
+          </v-col>
+        </v-row>
+             <router-view>
+     </router-view>
+     </div>
+  </nav>
+</template>
+
+<script>
+import Card from '../../components/admin/Card.vue'
+import ChartByType from '../../components/charts/ChartByType.vue';
+import ChartByParish from '../../components/charts/ChartByParish.vue';
+import Report from '../../apis/Report';
+import User from '../../apis/User.js';
+export default {
+  components:{
+    Card,
+    ChartByType,
+    ChartByParish
+  },
+  data() {
+    return {
+      drawer: true,
+       items: [
+          { title: 'Dashboard', icon: 'mdi-view-dashboard',route:'/dashboard' },
+          { title: 'Pending Reports', icon: 'mdi-file-tree-outline',route:'/dashboard/pending-reports' },
+          { title: 'Missing persons', icon: 'mdi-account-box',route:'/dashboard' },
+          { title: 'Active Users', icon: 'mdi-account-group', route:'/dashboard/active-users' },
+          { title: 'Logout', icon: 'mdi-logout', route:'/dashboard' },
+        ],
+        cardData:null,
+        cards:[]
+    }
+  },
+
+  methods:{
+    getCardData(){
+      Report.getCardData()
+      .then((res) => {
+        this.cardData = res.data
+        this.cards = [...this.cards,
+         {
+         text:'Active Users',
+          icon:require('../../assets/svg/group.svg'),
+          value:this.cardData.users
+          },
+          {
+         text:'Total Visitors',
+          icon:require('../../assets/svg/website.svg'),
+          value:1
+          },
+          {
+         text:'Pending Reports',
+          icon:require('../../assets/svg/pending.svg'),
+          value:this.cardData.pending
+          },
+          {
+         text:'Total Reports',
+          icon:require('../../assets/svg/report.svg'),
+          value:this.cardData.total_reports
+          }
+     ]
+        });
+    }
+  },
+
+
+  created(){
+    this.$store.dispatch('fetchAllReports');
+    this.getCardData();
+  }
+}
+</script>
+
+
+<style>
+.h-screen {
+  height: 100vh;
+}
+</style>

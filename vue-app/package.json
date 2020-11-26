@@ -12,14 +12,21 @@
   "dependencies": {
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
+    "chart.js": "^2.9.4",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "core-js": "^3.7.0",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "vee-validate": "^3.4.5",
     "vue": "^2.5.11",
+    "vue-chartjs": "^3.5.1",
+    "vue-moment": "^4.1.0",
+    "vue-phone-number-input": "^1.1.10",
     "vue-router": "^3.4.9",
+    "vue-truncate-collapsed": "^3.0.1",
     "vuetify": "^2.3.17",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "vuex-persistedstate": "^4.0.0-beta.1"
   },
   "browserslist": [
     "> 1%",
@@ -34,6 +41,7 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "deepmerge": "^4.2.2",
+    "dotenv-webpack": "^6.0.0",
     "file-loader": "^1.1.4",
     "node-sass": "^4.14.1",
     "sass": "^1.29.0",

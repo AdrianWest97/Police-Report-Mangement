@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-text>{{successDialog.message}}</v-card-text>
         <div  class="m-auto text-center">
-        <h4>Ref#:</h4>
+        <h4>REF#:</h4>
         <h1 class="text-uppercase">{{successDialog.content}}</h1>
         </div>
         <v-card-actions>

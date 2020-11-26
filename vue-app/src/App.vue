@@ -1,18 +1,19 @@
 <template>
   <v-app>
-    <div  id="app">
-          <Navigation />
+      <v-main>
+          <track-report-dialog/>
+              <router-view />
 
-    </div>
-    <router-view />
+      </v-main>
   </v-app>
 </template>
 
 <script>
-import Navigation from "./components/Navigation.vue";
+import TrackReportDialog from "./components/TrackReportDialog.vue"
+
 export default {
   components: {
-    Navigation
+    TrackReportDialog
   },
   mounted() {
     this.$store.commit("LOGIN", !!localStorage.getItem("token"));

@@ -1,10 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Report from './apis/Report'
+import createPersistedState from 'vuex-persistedstate'
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+    plugins: [createPersistedState({
+        storage: window.sessionStorage,
+    })],
   state: {
+    showNav: false,
     auth: {
       login: false,
       user: []
@@ -44,7 +51,16 @@ export default new Vuex.Store({
         visible:false,
            content: "",
         timeout:2000
-        },
+    },
+
+    TrackReportDialog: {
+        visible:false
+    },
+    RespondDialog:{
+      visible: false,
+      report:null
+    },
+    AllReports:null
   },
 
 
@@ -69,7 +85,13 @@ export default new Vuex.Store({
     },
     getEditReport(state) {
       return state.EditReportDialog;
-    }
+    },
+       getRespondDialog(state) {
+      return state.RespondDialog
+    },
+    getAllReports(state) {
+      return state.AllReports;
+       }
   },
   mutations: {
     LOGIN (state, status) {
@@ -88,6 +110,12 @@ export default new Vuex.Store({
         dialog:dialog
       }
     },
+        SET_TRACK_REPORT_DIALOG(state, dialog) {
+      state.TrackReportDialog= {
+        visible:dialog
+      }
+    },
+
     SET_SUCCESS_DIALOG(state, data) {
       state.successDialog = {
         content: data.content,
@@ -109,10 +137,41 @@ export default new Vuex.Store({
         report: data.report,
         visible:data.visible
       }
-    }
+    },
+        SET_RESPOND_DIALOG(state, data) {
+      state.RespondDialog = {
+        report:data.report,
+        visible:data.visible
+      }
+    },
+    SET_ALL_REPORTS(state, data) {
+      return state.AllReports = data;
+        }
+
   },
 
   actions: {
+         showTrackReportDialog({commit}){
+        commit("SET_TRACK_REPORT_DIALOG",true)
+    },
 
+    fetchAllReports({ commit }) {
+         Report.getAll()
+           .then((res) => {
+          commit("SET_ALL_REPORTS", {
+            AllReports:res.data.reports
+          })
+      })
+    },
+
+    // showRespondDialog({ commit }, id) {
+    //   Report.reportById(id)
+    //     .then((res) => {
+    //       commit("SET_RESPOND_DIALOG", {
+    //         visible: true,
+    //         report:res.data.report
+    //       })
+    //   })
+    //   }
   }
 })

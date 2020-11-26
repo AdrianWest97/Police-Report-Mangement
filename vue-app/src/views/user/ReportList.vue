@@ -1,7 +1,8 @@
 <template>
+    <v-container>
         <v-row>
            <v-col cols="12" >
-    <v-sheet color="grey" v-if="firstLoad" :loading="loading">
+    <v-sheet  v-if="firstLoad" :loading="loading">
         <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
     </v-sheet>
   <v-card outlined>
@@ -47,19 +48,21 @@
     </template>
     <template v-slot:item.actions="{ item }">
                 <v-icon
-                small
+                medium
                 class="mr-2"
-                 slot="a"
                  @click="editItem(item)"
+                 :disabled="item.status == 2"
                 >
-             mdi-pencil
+             mdi-pencil-outline
                </v-icon>
 
       <v-icon
-        small
+        medium
         @click="deleteItem(item)"
+       :disabled="item.status == 2"
+
       >
-        mdi-delete
+        mdi-delete-outline
       </v-icon>
     </template>
 
@@ -78,35 +81,29 @@
   <snack-bar/>
   <edit-report/>
   </v-row>
+    </v-container>
 </template>
 
 <script>
 import Report from '../../apis/Report';
 import EditReport from '../../components/EditReport.vue';
 import SnackBar from '../../components/SnackBar.vue';
-import vue from 'vue';
 export default {
   data () {
       return {
-
-            loading:true,
-            firstLoad:true,
-             dialog: false,
+      loading:true,
+      firstLoad:true,
+      dialog: false,
       dialogDelete: false,
      headers: [
-        {
-          text: 'Date',
-          align: 'start',
-          sortable: false,
-          value: 'date',
-        },
+        {text: 'Date',align: 'start',sortable: false,value: 'date'},
         { text: 'id', value: 'id', align:'d-none' },
         { text: 'Reference #',  value: 'reference_number' },
         { text: 'Type', value: 'type' },
         { text: 'Status', value: 'status' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-        reports: [],
+      reports: [],
       editedIndex: -1,
       editedItem: {
         date: '',
@@ -126,8 +123,7 @@ export default {
     },
   methods:{
     fetchReports(){
-      this.reports = [];
-      Report.reports()
+      return Report.reports()
       .then((res)=>{
              res.data.reports.forEach(report =>{
                 this.reports = [...this.reports, {
@@ -138,13 +134,9 @@ export default {
                 status: report.status,
                 }]
             });
-                    setTimeout(() => {
+            setTimeout(() => {
           if (this.firstLoad) this.firstLoad = false
           this.loading = false;
-        //   resolve({
-        //     items,
-        //     total,
-        //   });
         }, 1000);
       });
 
@@ -165,10 +157,10 @@ export default {
         this.dialogDelete = true
       },
 
-       deleteItemConfirm () {
-        Report.delete(this.reports[this.editedIndex].id)
+       async deleteItemConfirm () {
+       await Report.delete(this.reports[this.editedIndex].id)
         .then((res)=>{
-                this.fetchReports();
+                this.reports.splice(this.editedIndex,1)
                 this.$store.commit('SET_SNACK_BAR',{
                     visible:true,
                     content:"Item deleted",

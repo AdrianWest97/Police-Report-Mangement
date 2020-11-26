@@ -1,13 +1,13 @@
 <template>
 <div>
-<!-- Full Page Image Header with Vertically Centered Content -->
+  <navigation></navigation>
 <header class="masthead bg-dark">
   <div class="container h-100">
     <div class="row h-100 align-items-center">
       <div class="col-12 text-center">
         <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Report <span class="text-danger">Online</span></h1>
         <p class="lead">Creating a safer Jamaica for all</p>
-        <v-btn rounded elevation="2">Get Started</v-btn>
+        <v-btn rounded color="info" x-large>Get Started</v-btn>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
          <h4 class="font-weight-bolder">Find your area</h4>
        <p>Find out local information about where you live including
  crime statistics and where your closest station is.</p>
-     <v-text-field outlined label="Another input" rounded></v-text-field>
+     <v-text-field label="Another input" rounded filled></v-text-field>
 
       </div>
     </div>
@@ -48,7 +48,7 @@
     </router-link>
 </v-col>
     <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
-		<router-link to="/dashboard/report" class="card2">
+		<a href="#" @click="$store.dispatch('showTrackReportDialog')" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
            <img src="../assets/svg/delivery.svg" alt="track"/>
@@ -56,7 +56,7 @@
       <h3>Track your Reports</h3>
        <p class="small">Track your report progress to see when it has been approved.</p>
       </div>
-    </router-link>
+		</a>
 </v-col>
 
     <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
@@ -103,10 +103,10 @@ export default {
 .masthead {
   height: 100vh;
   min-height: 500px;
-  /* background-image: url('https://source.unsplash.com/BtbjCFUvBXs/1920x1080');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; */
+  //  background-image: url('https://source.unsplash.com/BtbjCFUvBXs/1920x1080');
+  // background-size: cover;
+  // background-position: center;
+  // background-repeat: no-repeat;
 }
 
 </style>

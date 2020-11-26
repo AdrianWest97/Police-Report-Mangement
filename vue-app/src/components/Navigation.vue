@@ -1,7 +1,7 @@
 <template>
 
   <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top" style="z-index:1">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-none fixed-top" style="z-index:1">
   <div class="container">
     <a class="navbar-brand" href="#">REPORT <span class="text-danger"> CRIME</span> ONLINE</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">

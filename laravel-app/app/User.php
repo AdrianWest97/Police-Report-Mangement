@@ -41,4 +41,8 @@ class User extends Authenticatable
     public function reports(){
         return $this->hasMany(Report::class,'user_id')->with(['address','type']);
     }
+
+    public function address(){
+                   return $this->morphOne(Address::class,'addressable');
+    }
 }

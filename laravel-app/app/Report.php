@@ -33,4 +33,8 @@ class Report extends Model
         public function witnesses(){
             return $this->hasMany(Witness::class,'report_id');
         }
+
+        public function responses(){
+            return $this->hasMany(Response::class,'report_id');
+        }
 }

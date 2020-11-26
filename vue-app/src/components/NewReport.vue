@@ -2,7 +2,7 @@
 <div>
   <v-row justify="center">
     <v-dialog v-model="reportDialog.dialog"
-       scrollable max-width="800px"
+       scrollable max-width="700px"
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
@@ -45,31 +45,29 @@
                 sm="6"
                 md="6"
               >
-                     <v-menu
-											v-model="menu"
-											:close-on-content-click="false"
-											transition="scale-transition"
-											offset-y
-										>
-											<template v-slot:activator="{ on, attrs }">
-												<v-text-field
-													v-model="computedDateFormatted"
-													label="When did this happen?"
-													hint="MM/DD/YYYY format"
-													persistent-hint
-													prepend-icon="mdi-calendar"
-													readonly
-
-													v-bind="attrs"
-													v-on="on"
-												></v-text-field>
-											</template>
-											<v-date-picker
-												v-model="form.date"
-												no-title
-												@input="menu = false"
-											></v-date-picker>
-										</v-menu>
+                    <v-menu
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="form.date"
+            label="Picker without buttons"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="form.date"
+          @input="menu2 = false"
+        ></v-date-picker>
+      </v-menu>
               </v-col>
 
                   </v-row>
@@ -143,9 +141,8 @@
                     <v-row>
                       <v-col
                       cols="12">
-                      	<validation-provider name="details" rules="required">
+                <validation-provider name="details" rules="required">
                    <v-textarea
-                    :rules="textAreaRules"
                     counter
                     rows="2"
                      row-height="50"
@@ -153,11 +150,11 @@
                     label="Details"
                     class="mt-1"
                     v-model="form.details"
-                    	slot-scope="{ errors }"
-												:error-messages="errors"
-												required
+                    slot-scope="{ errors }"
+										:error-messages="errors"
+										required
                   ></v-textarea>
-                      	</validation-provider>
+              	</validation-provider>
                       </v-col>
                       <v-col cols="12">
                    <v-checkbox
@@ -192,7 +189,6 @@
                         v-model="temp_name"
 												hide-details="auto"
                         class="m-1"
-
 											></v-text-field>
 										</validation-provider>
                      	<validation-provider name="Phone no.">
@@ -209,9 +205,8 @@
 
               </v-col>
                <v-col
-                      cols="12">
+                 cols="12">
                 <v-textarea
-                    :rules="textAreaRules"
                     counter
                     rows="2"
                      row-height="50"
@@ -221,17 +216,13 @@
                     v-model="form.additional"
                   ></v-textarea>
                       </v-col>
-                  <v-col col="12">
-                    <v-divider></v-divider>
-                    <v-checkbox v-model="form.accepted_terms">
-      <template v-slot:label>
-        <div>
-          By clicking submit, you certify that all the given information
-is true and correct.
-        </div>
+                  	<validation-provider class="mx-4" name="Accepted terms" rules="required">
+                    <v-checkbox required v-model="form.accepted_terms">
+                    <template v-slot:label>
+                         By clicking submit, you certify that all the given information is true and correct.
       </template>
     </v-checkbox>
-                  </v-col>
+                  	</validation-provider>
                     </v-row>
                   </v-card-title>
                 </v-card>
@@ -243,19 +234,18 @@ is true and correct.
           <v-btn
             color="blue darken-1"
             text
-           @click="$store.commit('SET_REPORT_DIALOG',false)"
+           @click="closeDialog()"
           >
             Cancel
           </v-btn>
           <v-btn
-            color="blue darken-1"
-            :text="!invalid && form.accepted_terms ? false : true"
+            color="success"
            :loading="loading"
             type="submit"
-            :disabled="!invalid && form.accepted_terms ? false : true"
+            :disabled="invalid"
             @click.prevent="submit()"
           >
-          Submit
+          Submit Report
           </v-btn>
         </v-card-actions>
         </v-form>
@@ -273,7 +263,7 @@ import Report from '../apis/Report'
 import Api from '../apis/Api';
 import { required, email, max } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-import { mapGetters,mapMutations } from 'vuex'
+import { mapGetters} from 'vuex'
 import SuccessModal from '../components/successModal.vue';
 
 
@@ -297,8 +287,9 @@ extend('required', {
    data:()=>{
      return{
       loading: false,
+      menu2:false,
        form:{
-        date: new Date().toISOString().substr(0, 10),
+      date: new Date().toISOString().substr(0, 10),
         now:false,
         parish:'',
         city:'',
@@ -312,16 +303,12 @@ extend('required', {
        },
        temp_name:'',
        temp_phone:'',
-       textAreaRules:[v=> v.length <= 1000 || 'Max 250 chracters'],
       	menu: false,
 
      }
    },
    computed:{
      ...mapGetters(['reportTypes','parishes','reportDialog']),
-     computedDateFormatted() {
-			return this.formatDate(this.form.date);
-    },
    },
    methods:{
      deleteWitness(index){
@@ -337,6 +324,12 @@ extend('required', {
          this.temp_phone ="";
        }
      },
+     closeDialog(){
+       this.loading = false;
+      this.$refs.form.reset()
+       this.$refs.observer.reset()
+       this.$store.commit('SET_REPORT_DIALOG',false)
+     },
      submit(){
       this.loading = true;
        this.$refs.observer.validate();
@@ -344,10 +337,7 @@ extend('required', {
         .then((response) => {
           this.loading = false;
           //close form
-          this.$store.commit('SET_REPORT_DIALOG',false)
-          this.$refs.form.reset()
-
-
+          this.closeDialog();
           //show success
           this.$store.commit('SET_SUCCESS_DIALOG',{
           content:response.data.reference_number,
@@ -357,20 +347,7 @@ extend('required', {
         });
         })
      },
-     		formatDate(date) {
-			if (!date) return null;
-
-			const [year, month, day] = date.split("-");
-			return `${month}/${day}/${year}`;
-		},
-		parseDate(date) {
-			if (!date) return null;
-
-			const [month, day, year] = date.split("/");
-			return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-        },
    },
-
    created(){
      Report.reportTypes().then(res => this.$store.commit('REPORT_TYPES',res.data.types));
    },

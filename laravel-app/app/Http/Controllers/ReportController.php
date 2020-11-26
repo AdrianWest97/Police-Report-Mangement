@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendReference;
+// use App\Mail\SendReference;
+use App\Notifications\ReportUpdate;
 use Illuminate\Http\Request;
 use App\Report;
 use App\ReportType;
 use App\Witness;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\User;
 
 class ReportController extends Controller
 {
@@ -53,7 +55,8 @@ class ReportController extends Controller
               }
 
               //email reference number
-              $this->emailReferenceNumber($ref_num);
+              $msg = "Your report has been submitted for review";
+              $this->emailReferenceNumber($ref_num,$msg);
           }
           return response(['reference_number'=>$ref_num]);
     }
@@ -63,12 +66,14 @@ class ReportController extends Controller
     return substr(md5(uniqid(mt_rand(), true)), 0, $l);
 }
 
-public function emailReferenceNumber($ref){
+public function emailReferenceNumber($ref,$message){
     $data = [
      "to" =>auth()->user()->email,
-     "reference_number"=>strtoupper($ref)
+     "reference_number"=>strtoupper($ref),
+     "message"=>$message
     ];
-     Mail::send(new SendReference($data)); //mail handler
+    $user = User::find(auth()->id());
+   $user->notify(new ReportUpdate($data));
 }
 
   public function update(Request $request, $id){
@@ -117,6 +122,10 @@ public function emailReferenceNumber($ref){
         return response(['reports'=>auth()->user()->reports]);
     }
 
+    public function report($id){
+        return response(['report'=>Report::where('id',$id)->with(['address','type','witnesses'])->first()]);
+    }
+
         public function toArray($data){
         $json = preg_replace('/^parseresponse\((.*)\);/', '$1', $data);
         return json_decode($json,true);
@@ -136,6 +145,37 @@ public function emailReferenceNumber($ref){
         $deleted = Witness::destroy($id);
 
         return response(['deleted'=>$deleted]);
+    }
+
+
+    public function reportByTypeChart(){
+         $data = ReportType::select('type')->withCount('reports')->get();
+        return response(['data'=>$data]);
+
+    }
+
+        public function chartByParish(){
+         $data = Report::where('status',0)->with('address')->get()->pluck('address.parish')->toArray();
+        $parishes = [
+        "Hanover",
+        "St. Elizabeth",
+        "St. James",
+        "Trelawny",
+        "Westmoreland",
+        "Clarendon",
+        "Manchester",
+        "St. Ann",
+        "St. Catherine",
+        "St. Mary",
+        "Kingston",
+        "Portland",
+        "St. Andrew",
+        "St. Thomas"
+     ];
+     $match = array_unique(array_count_values(array_merge($parishes, $data)));
+               return response(['data'=>$match]);
+
+
     }
 
 }
