@@ -3,7 +3,7 @@
       <v-row align="center" justify="center">
         <v-col cols="12" md="6" lg="7" sm="12">
           <v-card elevation="2">
-            <v-card-title class="headline font-weight-bolder">Register</v-card-title>
+            <v-card-title class="headline font-weight-bolder">Create Account</v-card-title>
             <v-spacer></v-spacer>
             <v-card-text>
           <validation-observer
@@ -38,7 +38,7 @@
       >
          <v-text-field
           v-model="form.trn"
-         filled
+          filled
           :maxlength="9"
           rounded
           :error-messages="errors"
@@ -72,8 +72,15 @@
         name="Phone "
         rules="required"
       >
-        <vue-phone-number-input defaultCountryCode="JM" :no-country-selector="true"	 :border-radius="28" size="lg" :no-example="true" :only-countries="['JM']" v-model="form.phone" />
-
+     <v-text-field
+          v-model="form.phone"
+         filled
+          rounded
+          :error-messages="errors"
+          label="Enter your phone #"
+          required
+          dense
+        ></v-text-field>
       </validation-provider>
         </v-col>
 

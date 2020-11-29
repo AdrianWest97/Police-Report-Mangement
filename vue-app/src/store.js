@@ -7,11 +7,14 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    plugins: [createPersistedState({
-        storage: window.sessionStorage,
-    })],
+    // plugins: [createPersistedState({
+    //     storage: window.sessionStorage,
+    // })],
   state: {
+
+
     showNav: false,
+    num: 0,
     auth: {
       login: false,
       user: []
@@ -60,7 +63,7 @@ export default new Vuex.Store({
       visible: false,
       report:null
     },
-    AllReports:null
+    AllReports:[]
   },
 
 
@@ -94,25 +97,25 @@ export default new Vuex.Store({
        }
   },
   mutations: {
-    LOGIN (state, status) {
+    LOGIN(state, status) {
       state.auth.login = status
       state.auth.user = []
     },
 
-    AUTH_USER (state, user) {
+    AUTH_USER(state, user) {
       state.auth.user = user
     },
-        REPORT_TYPES (state, data) {
-          state.reportTypes = data;
+    REPORT_TYPES(state, data) {
+      state.reportTypes = data;
     },
     SET_REPORT_DIALOG(state, dialog) {
       state.newReportDialog = {
-        dialog:dialog
+        dialog: dialog
       }
     },
-        SET_TRACK_REPORT_DIALOG(state, dialog) {
-      state.TrackReportDialog= {
-        visible:dialog
+    SET_TRACK_REPORT_DIALOG(state, dialog) {
+      state.TrackReportDialog = {
+        visible: dialog
       }
     },
 
@@ -135,43 +138,40 @@ export default new Vuex.Store({
     SET_EDIT_REPORT_DIALOG(state, data) {
       state.EditReportDialog = {
         report: data.report,
-        visible:data.visible
+        visible: data.visible
       }
     },
-        SET_RESPOND_DIALOG(state, data) {
+    SET_RESPOND_DIALOG(state, data) {
       state.RespondDialog = {
-        report:data.report,
-        visible:data.visible
+        report: data.report,
+        visible: data.visible
       }
     },
     SET_ALL_REPORTS(state, data) {
-      return state.AllReports = data;
-        }
+      state.AllReports = data;
+    },
 
+    EDIT_REPORT(state, payload) {
+      var index = state.AllReports.findIndex(report => report.id == payload.id)
+      state.AllReports[index] = payload
+    },
   },
-
   actions: {
          showTrackReportDialog({commit}){
         commit("SET_TRACK_REPORT_DIALOG",true)
     },
 
-    fetchAllReports({ commit }) {
-         Report.getAll()
+   fetchAllReports({ commit }) {
+       Report.getAll()
            .then((res) => {
-          commit("SET_ALL_REPORTS", {
-            AllReports:res.data.reports
-          })
+             commit("SET_ALL_REPORTS", res.data.reports);
       })
     },
 
-    // showRespondDialog({ commit }, id) {
-    //   Report.reportById(id)
-    //     .then((res) => {
-    //       commit("SET_RESPOND_DIALOG", {
-    //         visible: true,
-    //         report:res.data.report
-    //       })
-    //   })
-    //   }
+    editReport({ commit },report) {
+      commit("EDIT_REPORT",report)
+    }
+
+
   }
 })

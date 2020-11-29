@@ -119,9 +119,7 @@ export default {
     }
   },
 
-
   created(){
-    this.$store.dispatch('fetchAllReports');
     this.getCardData();
   }
 }

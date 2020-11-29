@@ -1,5 +1,6 @@
 <template>
      <v-row>
+       {{$store.state.num}}
        <v-col cols="12">
              <v-sheet  v-if="firstLoad" :loading="loading">
         <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
@@ -82,11 +83,13 @@
 
 <script>
 import RespondModal from '../../components/admin/RespondModal';
+import Vue from 'vue';
+import { mapGetters } from 'vuex';
 export default {
   data:()=> ({
         loading:true,
         firstLoad:true,
-        pending:[],
+        // pending:[],
         headers: [
         {text: 'Date',align: 'start',value: 'date'},
         { text: 'id', value: 'id', align:'d-none' },
@@ -99,14 +102,18 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false },
       ],
   }),
+
+
   methods:{
     fetchReports(){
-      this.$store.dispatch('fetchAllReports');
-      this.pending = this.$store.getters.getAllReports.AllReports;
+      if(this.pending != null){
         setTimeout(() => {
           if (this.firstLoad) this.firstLoad = false
           this.loading = false;
         }, 1000);
+
+      }
+
     },
  checkStatus(status){
 if(status == 2){
@@ -137,14 +144,20 @@ respond(item){
 
 
 computed:{
+  ...mapGetters['getAllReports'],
   computedHeaders(){
     return this.headers.filter(header=> header.text != 'id')
   },
+  pending(){
+    return this.$store.state.AllReports.filter(report=> report.status != 2);
+  }
 },
 
 created(){
-   this.fetchReports();
+ this.$store.dispatch('fetchAllReports');
+ this.fetchReports();
 },
+
 
 components:{
 RespondModal

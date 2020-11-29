@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ReportUpdate;
+use App\Notifications\ReportUpdate;
 use App\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\User;
-
+use Exception;
 
 class AdminController extends Controller
 {
@@ -23,7 +23,8 @@ class AdminController extends Controller
         $data = $this->validate($request,[
             'id'=>'required','integer',
             'status'=>'required','integer',
-            'message'=>'required','string'
+            'message'=>'required','string',
+            'userId'=>'required'
         ]);
 
         //find report
@@ -33,24 +34,26 @@ class AdminController extends Controller
             'response'=>$data['message'],
             'status'=>$data['status'],
         ]);
-
-        $report->status = $data['status'];
+       $report->status = $data['status'];
         $report->save();
-        return response(['success'=>$this->emailUpdate($data['message'],$report->reference_number)]);
+        $user = User::find($report->user->id)->first();
+        try{
+        $this->NotifyUser($user,$data['message'],$report->reference_number);
+         return response(['success'=>true]);
+        }catch(Exception $ex){
+            return response(['success'=>false]);
+        }
     }
-
-
-    public function emailUpdate($message,$ref){
+    public function NotifyUser($user,$message,$ref){
     $data = [
-     "to" =>auth()->user()->email,
      "message"=>$message,
-     "ref"=>$ref
+     "reference_number"=>$ref,
     ];
      //mail handler
-     return Mail::send(new ReportUpdate($data));
+      $user->notify(new ReportUpdate($data));
 }
 
-public function cardData(){
+  public function cardData(){
     //total users
     $users = User::where('is_admin',0)->count();
     $total_reports = Report::count();

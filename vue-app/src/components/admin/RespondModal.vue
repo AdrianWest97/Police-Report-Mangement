@@ -75,7 +75,7 @@
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title>Additional details</v-list-item-title>
-        <v-list-item-subtitle  style="white-space:normal;"><truncate clamp="Read More" less="Show Less" :text="getRespondDialog.report.addtional"></truncate></v-list-item-subtitle>
+        <v-list-item-subtitle  style="white-space:normal;"><truncate clamp="Read More" less="Show Less" :text="getRespondDialog.report.additional"></truncate></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
 
@@ -103,15 +103,13 @@
                   label="Update status"
                 ></v-select>
                    </validation-provider>
-        <validation-provider name="message" rules="required">
+        <validation-provider name="message">
         <v-textarea
-          solo
           name="input-7-4"
           label="Type a response"
           required
+          filled
           v-model="form.message"
-          slot-scope="{ errors }"
-					:error-messages="errors"
         ></v-textarea>
         </validation-provider>
 
@@ -157,7 +155,8 @@ import Report from '../../apis/Report';
         form:{
         message:'',
         status:null,
-        id:null
+        id:null,
+        userId:''
         }
     }),
     components:{
@@ -174,11 +173,12 @@ import Report from '../../apis/Report';
           visible:false,
           report:null
         })
+
       },
       updateReport(){
         this.loading = true;
         if(this.form.message == ''){
-          this.form.message = `Report status updated to ${this.form.status}`;
+          this.form.message = `Report status: ${this.form.status}`;
         }
                this.$refs.observer.validate();
               if(this.form.status.toLowerCase() == 'pending'){
@@ -191,15 +191,15 @@ import Report from '../../apis/Report';
                  this.form.status = 0;
                }
                this.form.id=this.getRespondDialog.report.id;
-
+              this.form.userId = this.getRespondDialog.report.user.id;
               Report.updateStatus(this.form).
               then((res)=>{
-                  this.loading = false;
+                this.loading = false;
+                  this.closeDialog();
+                var item = this.$store.state.AllReports.filter(report=> report.id == this.form.id);
+                item[0].status = this.form.status;
+                this.$store.commit('EDIT_REPORT',item);
               })
-            this.closeDialog();
-
-
-
       }
     },
 
