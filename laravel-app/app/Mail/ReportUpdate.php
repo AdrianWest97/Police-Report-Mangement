@@ -26,7 +26,7 @@ class ReportUpdate extends Mailable
     public function build()
     {
         return $this->markdown('emails.reportUpdate',['message'=>$this->data['message'],'ref'=>$this->data['ref']])
-        ->to($this->data['to'])
+      ->to($this->data['to'])
       ->from(env('MAIL_FROM_EMAIl','westsparta@gmail.com'));
     }
 }

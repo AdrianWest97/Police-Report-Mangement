@@ -6,7 +6,7 @@
         <span class="font-weight-light">Report Management</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text color="grey">
+      <v-btn @click="logout()" text color="grey">
         <span>Sign Out</span>
         <v-icon right>mdi-logout</v-icon>
       </v-btn>
@@ -116,7 +116,25 @@ export default {
           }
      ]
         });
+    },
+
+    logout () {
+      User.logout().then(() => {
+        localStorage.removeItem('token')
+        this.$store.commit('LOGIN', false)
+        if(this.$route.path != "/"){
+        this.$router.push({ path: '/' })
+        }
+      }).catch((err)=>{
+      if(err.response.status == 401){
+        localStorage.removeItem('token')
+         this.$store.commit('LOGIN', false)
+        if(this.$route.path != "/"){
+        this.$router.push({ path: '/' })
+      }
     }
+      });
+  }
   },
 
   created(){

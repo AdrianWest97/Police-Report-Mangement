@@ -1,6 +1,5 @@
 <template>
      <v-row>
-       {{$store.state.num}}
        <v-col cols="12">
              <v-sheet  v-if="firstLoad" :loading="loading">
         <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
@@ -18,6 +17,7 @@
       <v-chip
         :color="checkStatus(item.status).color"
         class="text-white"
+        small
       >
        {{checkStatus(item.status).value}}
       </v-chip>

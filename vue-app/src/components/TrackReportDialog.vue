@@ -2,29 +2,63 @@
   <v-row justify="center">
     <v-dialog
       v-model="$store.state.TrackReportDialog.visible"
-      persistent
-      max-width="500"
+       scrollable
+        max-width="700px"
+       overlay-color="#8c95a6"
+
     >
-      <v-card>
+      <v-card
+       :loading="isSearching">
         <v-card-title class="headline">
-         Enter your report reference number
-        </v-card-title>
-        <v-card-text>
-      <v-text-field
+
+        <v-text-field
         v-model="search"
-        append-icon="mdi-magnify"
         label="Eneter 6 digit reference number"
         hide-details
         rounded
         :maxlength="max"
         @input=" search = search.toUpperCase();"
-        @keyup="fetchReportStatus()"
-      ></v-text-field>
-    <v-sheet color="light" v-if="isSearching">
-        <v-skeleton-loader class="mx-auto"   type="article"
-></v-skeleton-loader>
-    </v-sheet>
+      >
+        <template slot="append">
+           <v-icon v-show="search"  @click="fetchReportStatus()" medium> mdi-magnify </v-icon>
+      </template>
+      </v-text-field>
+        </v-card-title>
+        <v-card-text>
+       <v-timeline v-show="results.length > 0" dense class="my-4">
+      <v-timeline-item
+        v-for="result in results"
+        :key="result.id"
+        large
+        fill-dot
+       class="white--text mb-12"
+       :color="checkStatus(JSON.parse(result.data).status).color"
 
+      >
+         <template v-slot:icon>
+          <span>{{result.created_at | moment("MMM D")}}</span><br>
+        </template>
+       <v-card  flat>
+        <v-card-title>{{result.created_at | moment("ddd, MMM D YYYY")}}</v-card-title>
+        <v-card-subtitle>
+         <v-chip
+        :color="checkStatus(JSON.parse(result.data).status).color"
+        class="text-white"
+        small
+      >
+       {{JSON.parse(result.data).status}}
+      </v-chip>
+        </v-card-subtitle>
+        <v-card-text>
+          {{JSON.parse(result.data).message}}
+        </v-card-text>
+      </v-card>
+      </v-timeline-item>
+    </v-timeline>
+
+    <div class="d-flex justify-content-center" v-if="empty">
+      No updates found
+    </div>
         </v-card-text>
 
         <v-card-actions>
@@ -42,11 +76,14 @@
 </template>
 
 <script>
+import Report from "../apis/Report"
   export default {
     data:()=>({
       search:'',
+      results:[],
+      max:7,
       isSearching:false,
-      max:7
+      empty:null
     }),
     methods:{
        closeDialog(){
@@ -55,12 +92,35 @@
         this.$store.commit("SET_TRACK_REPORT_DIALOG",false)
       },
       fetchReportStatus(){
-        if(this.search.length > 0){
-            this.isSearching = true;
-        }else{
-           this.isSearching = false;
+       this.isSearching = true;
+       Report.getStatus(this.search).then((res=>{
+        this.results = res.data;
+        if(this.results.length < 1){
+          this.empty = true;
         }
-      }
+        this.isSearching = false;
+      }));
+      },
+
+
+checkStatus(status){
+if(status.toLowerCase() == "approved"){
+  return {
+    color:'#56a95b',
+    value:'Approved',
+  }
+}else if(status.toLowerCase() == "reviewing"){
+ return {
+    color:'#fe9600',
+    value:'Reviewing',
+  }
+  }else{
+    return {
+    color:'#1976d2',
+    value:'Pending',
+  }
+  }
+},
     }
   }
 </script>

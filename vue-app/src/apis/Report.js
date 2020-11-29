@@ -46,5 +46,8 @@ export default {
   //active users
 getActiveUsers() {
   return Api().get('/admin/active-users');
-}
+  },
+  getStatus($ref) {
+    return Api().get('/status/'+$ref)
+  }
 }

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Notifications\ReportUpdate;
+use App\Mail\ReportUpdate as sendMail;
 use App\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -39,20 +39,32 @@ class AdminController extends Controller
        $report->status = $data['status'];
         $report->save();
         $user = User::find($report->user->id)->first();
+
+        //send report notififaction
+        // $report->notify(new ReportUpdate(
+        //    [
+        //        "reference_number"=>$report->reference_number,
+        //        "message"=>$data['status'],
+        //        "status"=>$data['status']
+        //        ]
+        // ));
+
         try{
-        $this->NotifyUser($user,$data['message'],$report->reference_number);
+        $this->UpdateEmail($user,$data['message'],$report->reference_number,strtolower($report->status($data['status'])));
          return response(['success'=>true]);
         }catch(Exception $ex){
             return response(['success'=>false]);
         }
     }
-    public function NotifyUser($user,$message,$ref){
+    public function UpdateEmail($user,$message,$ref,$status){
     $data = [
      "message"=>$message,
      "reference_number"=>$ref,
+     "status" => $status,
+     "to" => $user->email,
     ];
-     //mail handler
-      $user->notify(new ReportUpdate($data));
+     //update report history
+     $user->notify(new ReportUpdate($data));
 }
 
   public function cardData(){

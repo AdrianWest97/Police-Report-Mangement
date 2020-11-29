@@ -11,6 +11,8 @@ use App\Witness;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ReportController extends Controller
 {
@@ -174,8 +176,11 @@ public function emailReferenceNumber($ref,$message){
      ];
      $match = array_unique(array_count_values(array_merge($parishes, $data)));
                return response(['data'=>$match]);
-
-
     }
 
+    public function ReportStatus($ref){
+        return DB::table('notifications')->get()->filter(function($data) use ($ref){
+           return json_decode($data->data)->reference_number == strtolower($ref);
+        });
+    }
 }

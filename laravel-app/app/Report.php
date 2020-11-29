@@ -3,12 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
- use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
+use ShiftOneLabs\LaravelCascadeDeletes\CascadesDeletes;
+use Illuminate\Notifications\Notifiable;
 
 
 class Report extends Model
 {
-     protected $cascadeDeletes = ['address','witnesses'];
+
+    use Notifiable;
+
+    protected $cascadeDeletes = ['address','witnesses'];
 
     protected $fillable =[
         'details',
@@ -36,5 +40,15 @@ class Report extends Model
 
         public function responses(){
             return $this->hasMany(Response::class,'report_id');
+        }
+
+        public function status($status){
+            if($status == 0){
+                return "PENDING";
+            }else if($status == 1){
+                return "REVIEWING";
+            }else if($status == 2){
+                return "APPROVED";
+            }
         }
 }

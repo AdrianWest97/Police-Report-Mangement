@@ -25,7 +25,7 @@ class ReportUpdate extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -51,6 +51,15 @@ class ReportUpdate extends Notification
     {
         return [
             //
+        ];
+    }
+
+      public function toDatabase($notifiable)
+    {
+        return [
+            "status" => $this->data['status'],
+            "message"=>$this->data['message'],
+            "reference_number"=>$this->data['reference_number']
         ];
     }
 }
