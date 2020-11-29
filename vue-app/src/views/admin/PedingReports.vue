@@ -149,7 +149,7 @@ computed:{
     return this.headers.filter(header=> header.text != 'id')
   },
   pending(){
-    return this.$store.state.AllReports.filter(report=> report.status != 2);
+    return this.$store.state.AllReports;
   }
 },
 

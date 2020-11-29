@@ -90,6 +90,7 @@
                 >
                     <v-form
                     @submit.prevent="updateReport"
+                    ref="form"
                     >
                    <validation-provider name="status" rules="required">
                     <v-select
@@ -103,13 +104,15 @@
                   label="Update status"
                 ></v-select>
                    </validation-provider>
-        <validation-provider name="message">
+        <validation-provider name="message" rules="required">
         <v-textarea
           name="input-7-4"
           label="Type a response"
           required
           filled
           v-model="form.message"
+           slot-scope="{ errors }"
+				  	:error-messages="errors"
         ></v-textarea>
         </validation-provider>
 
@@ -169,6 +172,8 @@ import Report from '../../apis/Report';
     },
     methods:{
        closeDialog(){
+        this.$refs.form.reset();
+        this.loading = false;
         this.$store.commit("SET_RESPOND_DIALOG",{
           visible:false,
           report:null
@@ -177,9 +182,6 @@ import Report from '../../apis/Report';
       },
       updateReport(){
         this.loading = true;
-        if(this.form.message == ''){
-          this.form.message = `Report status: ${this.form.status}`;
-        }
                this.$refs.observer.validate();
               if(this.form.status.toLowerCase() == 'pending'){
                 this.form.status = 0;
@@ -192,13 +194,15 @@ import Report from '../../apis/Report';
                }
                this.form.id=this.getRespondDialog.report.id;
               this.form.userId = this.getRespondDialog.report.user.id;
+              console.log(this.form)
               Report.updateStatus(this.form).
               then((res)=>{
                 this.loading = false;
-                  this.closeDialog();
                 var item = this.$store.state.AllReports.filter(report=> report.id == this.form.id);
                 item[0].status = this.form.status;
                 this.$store.commit('EDIT_REPORT',item);
+                this.closeDialog();
+
               })
       }
     },

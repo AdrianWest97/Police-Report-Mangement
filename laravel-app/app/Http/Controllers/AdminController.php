@@ -12,7 +12,9 @@ use Exception;
 class AdminController extends Controller
 {
     public function all(){
-        $reports = Report::with(['address','user','type'])
+        $reports = Report::where('status',0)
+        ->orWhere('status',1)
+        ->with(['address','user','type'])
         ->orderBy('created_at','asc')
         ->get();
         return response(['reports'=>$reports]);
