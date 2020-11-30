@@ -24,6 +24,12 @@ const routes = [
     name: 'NotFound',
     component:NotFound
   },
+        {
+        path: '/missing',
+        name: 'missing-list',
+        component: MissingList,
+         meta: { guestOnly: true }
+      },
   {
     path: '/',
     name: 'Home',
@@ -82,13 +88,6 @@ const routes = [
 
     ]
   },
-
-         {
-        path: '/missing',
-        name: 'missing-list',
-        component:MissingList
-      }
-
 
 ]
 

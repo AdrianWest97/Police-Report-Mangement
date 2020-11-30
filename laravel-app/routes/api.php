@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 //no auth required
 Route::get('/status/{ref}','ReportController@ReportStatus');
+    Route::get('/missing/all','MissingPersonController@allMissing');
+
 
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -35,7 +37,6 @@ Route::prefix('admin')->group(function(){
 
 //missing person
 Route::prefix('missing')->group(function(){
-    Route::get('/all','MissingPersonController@allMissing');
     Route::post('/create/{mode}/{id?}','MissingPersonController@store');
     Route::delete('/delete/{id}','MissingPersonController@destroy');
 });

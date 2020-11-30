@@ -53,6 +53,10 @@
                {{ item.date | moment("ddd, MMM D YYYY") }}
         </template>
 
+             <template v-slot:item.parish="{ item }">
+               {{ item.address.parish }}
+        </template>
+
    <template v-slot:item.reference_number="{ item }">
                {{ item.reference_number.toUpperCase() }}
         </template>
@@ -100,6 +104,7 @@ export default {
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: 'Phone', value: 'phone' },
+        { text: 'Parish', value: 'parish' },
         { text: 'Status', value: 'status' },
         { text: 'Type', value: 'type' },
         { text: 'Actions', value: 'actions', sortable: false },

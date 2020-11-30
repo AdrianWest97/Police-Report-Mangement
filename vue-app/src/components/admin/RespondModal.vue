@@ -142,6 +142,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <snack-bar></snack-bar>
   </v-row>
 </template>
 
@@ -150,6 +151,7 @@ import { mapGetters } from 'vuex';
 import truncate from 'vue-truncate-collapsed';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import Report from '../../apis/Report';
+import SnackBar from '../SnackBar.vue';
 
 
   export default {
@@ -166,6 +168,7 @@ import Report from '../../apis/Report';
       truncate,
        ValidationProvider,
       ValidationObserver,
+      SnackBar
     },
     computed:{
       ...mapGetters(['getRespondDialog']),
@@ -201,6 +204,11 @@ import Report from '../../apis/Report';
                 var item = this.$store.state.AllReports.filter(report=> report.id == this.form.id);
                 item[0].status = this.form.status;
                 this.$store.commit('EDIT_REPORT',item);
+                    this.$store.commit('SET_SNACK_BAR',{
+                    visible:true,
+                    content:"Report status updated",
+                    timeout:2000
+                })
                 this.closeDialog();
 
               })

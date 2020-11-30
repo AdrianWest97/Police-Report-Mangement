@@ -7,13 +7,13 @@
       <div class="col-12 text-center">
         <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Report <span class="text-danger">Online</span></h1>
         <p class="lead">Creating a safer Jamaica for all</p>
-        <v-btn rounded color="info" x-large>Get Started</v-btn>
+        <v-btn @click="$vuetify.goTo('#start')" rounded color="info" x-large>Get Started</v-btn>
       </div>
     </div>
   </div>
 </header>
 
- <section class="py-5" style="background-color:#F3F3F3">
+ <section class="py-5" id="start" style="background-color:#F3F3F3">
   <div class="container">
     <div class="row">
       <div class="col-12 col-lg-6">

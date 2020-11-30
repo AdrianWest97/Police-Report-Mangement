@@ -4,7 +4,7 @@
   <div class="text-center ma-2">
     <v-snackbar
       v-model="$store.getters.getSnack.visible"
-      right
+      left
       :timeout="$store.getters.getSnack.timeout"
     >
       {{$store.getters.getSnack.content }}

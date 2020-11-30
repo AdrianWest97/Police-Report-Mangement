@@ -1,9 +1,9 @@
 <template>
 
   <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top" >
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top"  style="z-index:1">
   <div class="container">
-    <router-link to="/">REPORT <span class="text-danger"> CRIME</span> ONLINE</router-link>
+    <router-link to="/" class="font-weight-bold text--darken-1">REPORT <span class="text-danger"> CRIME</span> ONLINE</router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -66,5 +66,11 @@ export default {
 <style scoped>
 .router-link-exact-active {
   transition: all 0.25s;
+
+}
+
+a {
+    color: #428BCA !important;
+    text-decoration: none;
 }
 </style>
