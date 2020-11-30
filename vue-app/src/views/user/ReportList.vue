@@ -158,8 +158,8 @@ export default {
         this.dialogDelete = true
       },
 
-       async deleteItemConfirm () {
-       await Report.delete(this.reports[this.editedIndex].id)
+       deleteItemConfirm () {
+       Report.delete(this.reports[this.editedIndex].id)
         .then((res)=>{
                 this.reports.splice(this.editedIndex,1)
                 this.$store.commit('SET_SNACK_BAR',{

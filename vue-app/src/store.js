@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Report from './apis/Report'
+import MissingPersons from './apis/MissingPerson'
 import createPersistedState from 'vuex-persistedstate'
 
 
@@ -11,8 +12,6 @@ export default new Vuex.Store({
     //     storage: window.sessionStorage,
     // })],
   state: {
-
-
     showNav: false,
     num: 0,
     auth: {
@@ -20,6 +19,9 @@ export default new Vuex.Store({
       user: []
     },
     newReportDialog: {
+      dialog:false
+    },
+       missingDialog: {
       dialog:false
     },
       successDialog: {
@@ -63,7 +65,8 @@ export default new Vuex.Store({
       visible: false,
       report:null
     },
-    AllReports:[]
+    AllReports: [],
+    MissingPersons:[]
   },
 
 
@@ -80,6 +83,9 @@ export default new Vuex.Store({
     reportDialog(state) {
       return state.newReportDialog;
     },
+        missingReportDialog(state) {
+      return state.missingDialog;
+    },
     successDialog(state) {
       return state.successDialog;
     },
@@ -94,7 +100,10 @@ export default new Vuex.Store({
     },
     getAllReports(state) {
       return state.AllReports;
-       }
+    },
+    getAllMissing(state) {
+      return state.MissingPersons
+    }
   },
   mutations: {
     LOGIN(state, status) {
@@ -113,6 +122,13 @@ export default new Vuex.Store({
         dialog: dialog
       }
     },
+
+      SET_MISSING_REPORT_DIALOG(state, dialog) {
+      state.missingDialog = {
+        dialog: dialog
+      }
+    },
+
     SET_TRACK_REPORT_DIALOG(state, dialog) {
       state.TrackReportDialog = {
         visible: dialog
@@ -155,6 +171,13 @@ export default new Vuex.Store({
       var index = state.AllReports.findIndex(report => report.id == payload.id)
       state.AllReports[index] = payload
     },
+
+    SET_ALL_MISSING(state, payload) {
+      state.MissingPersons = payload;
+    },
+    ADD_MISSING_REPORT(state, payload) {
+      state.MissingPersons = [...state.MissingPersons, payload];
+    }
   },
   actions: {
          showTrackReportDialog({commit}){
@@ -167,6 +190,13 @@ export default new Vuex.Store({
              commit("SET_ALL_REPORTS", res.data.reports);
       })
     },
+      fetchAllMissing({ commit }) {
+       MissingPersons.getAll()
+           .then((res) => {
+             commit("SET_ALL_MISSING", res.data);
+      })
+    },
+
 
     editReport({ commit },report) {
       commit("EDIT_REPORT",report)

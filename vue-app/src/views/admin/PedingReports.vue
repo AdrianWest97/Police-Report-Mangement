@@ -53,6 +53,9 @@
                {{ item.date | moment("ddd, MMM D YYYY") }}
         </template>
 
+   <template v-slot:item.reference_number="{ item }">
+               {{ item.reference_number.toUpperCase() }}
+        </template>
 
         <template v-slot:item.actions="{ item }">
                 <v-icon

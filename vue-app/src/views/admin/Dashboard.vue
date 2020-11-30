@@ -79,7 +79,7 @@ export default {
        items: [
           { title: 'Dashboard', icon: 'mdi-view-dashboard',route:'/dashboard' },
           { title: 'Pending Reports', icon: 'mdi-clock-time-eight-outline ',route:'/dashboard/pending-reports' },
-          { title: 'Missing persons', icon: 'mdi-account-box',route:'/dashboard' },
+          { title: 'Missing persons', icon: 'mdi-account-box',route:'/dashboard/missing-person' },
           { title: 'Active Users', icon: 'mdi-account-group', route:'/dashboard/active-users' },
           { title: 'Logout', icon: 'mdi-logout', route:'/dashboard' },
         ],

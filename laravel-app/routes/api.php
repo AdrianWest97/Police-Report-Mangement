@@ -33,6 +33,14 @@ Route::prefix('admin')->group(function(){
         Route::get('/active-users','AdminController@active_users');
 });
 
+//missing person
+Route::prefix('missing')->group(function(){
+    Route::get('/all','MissingPersonController@allMissing');
+    Route::post('/create','MissingPersonController@store');
+    Route::delete('/delete/{id}','MissingPersonController@destroy');
+});
+
+Route::get('/load_image/{image}','ImageController@getImage');
 Route::get('/reportTypes','ReportController@types');
 Route::post('/logout', 'LoginController@logout');
 });

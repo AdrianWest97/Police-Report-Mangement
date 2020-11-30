@@ -8,9 +8,12 @@ import userDashboard from '../views/user/report.vue'
 import userReports from '../views/user/ReportList.vue'
 import PendingReports from '../views/admin/PedingReports.vue'
 import ActiveUsers from '../views/admin/ActiveUsers.vue'
+import MissingPerson from '../views/admin/MissingPerson'
 import axios from "axios";
 import User from '../apis/User'
 import NotFound from '../views/NotFound.vue'
+import store from '../store'
+
 
 Vue.use(VueRouter)
 
@@ -54,6 +57,11 @@ const routes = [
         path: 'active-users',
         name: 'Active Users',
         component:ActiveUsers
+      },
+       {
+        path: 'missing-person',
+        name: 'Missing person',
+        component:MissingPerson
       }
     ]
   },
@@ -104,10 +112,8 @@ Vue.config.productionTip = false;
 axios.interceptors.response.use(
   response => response,
   error => {
-    if (error.response.status === 422) {
-      store.commit("setErrors", error.response.data.errors);
-    } else if (error.response.status === 401) {
-      this.$store.commit('LOGIN', true)
+  if (error.response.status === 401) {
+      store.commit('LOGIN', true)
       store.commit("AUTH_USER", null);
       localStorage.removeItem("token");
       router.push({ name: "Login" });

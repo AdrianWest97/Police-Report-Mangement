@@ -45,7 +45,7 @@
                 sm="6"
                 md="6"
               >
-    <validation-provider name="date" rules="required">
+      <validation-provider name="date" rules="required">
       <v-menu
         v-model="menu2"
         :close-on-content-click="false"
@@ -57,7 +57,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="form.date"
-            label="Picker without buttons"
+            label="Date of inccident"
             prepend-icon="mdi-calendar"
             readonly
             v-bind="attrs"
@@ -80,7 +80,7 @@
 
               <v-col cols="12">
                 <v-card flat style="margin:0 !important">
-                  <v-card-title>Location</v-card-title>
+                  <v-card-subtitle>Location</v-card-subtitle>
                   <v-card-title>
                     <v-row>
                       <v-col
@@ -138,7 +138,7 @@
 
               <v-col cols="12">
                 <v-card flat>
-                  <v-card-title>Description of inciddent</v-card-title>
+                  <v-card-subtitle>Description of inciddent</v-card-subtitle>
                   <v-card-title>
                     <v-row>
                       <v-col
@@ -265,7 +265,7 @@
 <script>
 import Report from '../apis/Report'
 import Api from '../apis/Api';
-import { required, email, max } from 'vee-validate/dist/rules'
+import { required, max } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import { mapGetters} from 'vuex'
 import SuccessModal from '../components/successModal.vue';
@@ -282,10 +282,6 @@ extend('required', {
     message: '{_field_} may not be greater than {length} characters',
   })
 
-  extend('email', {
-    ...email,
-    message: 'Email must be valid',
-  })
 
   export default {
    data:()=>{

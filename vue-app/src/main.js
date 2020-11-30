@@ -9,8 +9,8 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../src/assets/css/main.scss'
 Vue.use(require('vue-moment'));
-Vue.config.productionTip = false;
-console.log(process.env)
+
+
 new Vue({
   store,
   router,
