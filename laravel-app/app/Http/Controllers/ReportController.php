@@ -183,8 +183,8 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function ReportStatus($ref){
-        return DB::table('notifications')->get()->filter(function($data) use ($ref){
+        return response(['reports' => DB::table('notifications')->get()->filter(function($data) use ($ref){
            return json_decode($data->data)->reference_number == strtolower($ref);
-        });
+        })]);
     }
 }

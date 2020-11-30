@@ -13,7 +13,7 @@
 
         <v-text-field
         v-model="search"
-        label="Eneter 6 digit reference number"
+        label="Enter 6 digit reference number"
         hide-details
         rounded
         :maxlength="max"
@@ -36,7 +36,7 @@
 
       >
          <template v-slot:icon>
-          <span>{{result.created_at | moment("MMM D")}}</span><br>
+          <small class="text-small">{{result.created_at | moment("MMM DD")}}</small><br>
         </template>
        <v-card  flat>
         <v-card-title>{{result.created_at | moment("ddd, MMM D YYYY")}}</v-card-title>
@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { integer } from 'vee-validate/dist/rules';
 import Report from "../apis/Report"
   export default {
     data:()=>({
@@ -88,13 +89,16 @@ import Report from "../apis/Report"
     methods:{
        closeDialog(){
         this.isSearching = false;
+        this.results = [];
+        this.empty = null;
         this.search = '';
         this.$store.commit("SET_TRACK_REPORT_DIALOG",false)
       },
       fetchReportStatus(){
        this.isSearching = true;
+       this.empty = null;
        Report.getStatus(this.search).then((res=>{
-        this.results = res.data;
+         this.results = Object.values(res.data.reports);
         if(this.results.length < 1){
           this.empty = true;
         }

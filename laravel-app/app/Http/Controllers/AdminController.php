@@ -39,16 +39,6 @@ class AdminController extends Controller
        $report->status = $data['status'];
         $report->save();
         $user = User::find($report->user->id)->first();
-
-        //send report notififaction
-        // $report->notify(new ReportUpdate(
-        //    [
-        //        "reference_number"=>$report->reference_number,
-        //        "message"=>$data['status'],
-        //        "status"=>$data['status']
-        //        ]
-        // ));
-
         try{
         $this->UpdateEmail($user,$data['message'],$report->reference_number,strtolower($report->status($data['status'])));
          return response(['success'=>true]);
