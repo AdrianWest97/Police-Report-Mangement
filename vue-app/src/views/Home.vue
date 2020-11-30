@@ -60,7 +60,7 @@
 </v-col>
 
     <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
-		<router-link to="/dashboard/report" class="card2">
+		<router-link to="/missing" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
                       <img src="../assets/svg/search.svg" alt="track"/>

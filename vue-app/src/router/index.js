@@ -13,6 +13,7 @@ import axios from "axios";
 import User from '../apis/User'
 import NotFound from '../views/NotFound.vue'
 import store from '../store'
+import MissingList from '../views/MissingPersonList'
 
 
 Vue.use(VueRouter)
@@ -80,7 +81,13 @@ const routes = [
       },
 
     ]
-  }
+  },
+
+         {
+        path: '/missing',
+        name: 'missing-list',
+        component:MissingList
+      }
 
 
 ]
