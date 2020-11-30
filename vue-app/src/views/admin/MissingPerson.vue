@@ -48,6 +48,7 @@
                 <v-icon
                 class="mr-2"
                  medium
+                @click="editItem(item)"
                 >
             mdi-pencil-outline
                </v-icon>
@@ -72,10 +73,11 @@
                 <v-avatar
                 color="grey"
                 tile
-                size="50"
+                size="45"
+                class="m-2"
 
                 >
-              <img  :src="loadImage(item.image.path)" :alt="item.fname"/>
+              <img class="rounded"  :src="loadImage(item.image.path)" :alt="item.fname"/>
               </v-avatar>
 
          </template>
@@ -144,7 +146,11 @@ methods:{
 
  },
  addNew(){
-   this.$store.commit('SET_MISSING_REPORT_DIALOG',true)
+   this.$store.commit('SET_MISSING_REPORT_DIALOG',{
+     dialog:true,
+     mode:'add',
+     report:null
+   })
  },
 
 loadImage(image){
@@ -152,13 +158,11 @@ return 'http://localhost:8000/storage/images/'+image
 },
 
  editItem (item) {
-      //   Report.getEdit(item.id)
-      //   .then((res)=> {
-      //   this.$store.commit('SET_EDIT_REPORT_DIALOG',{
-      //    visible:true,
-      //    report:res.data.report
-      // })
-      //   });
+      this.$store.commit('SET_MISSING_REPORT_DIALOG',{
+     dialog:true,
+     mode:'edit',
+     report:item
+   })
       },
 
      deleteItem (item) {

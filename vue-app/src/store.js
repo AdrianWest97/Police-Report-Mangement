@@ -22,7 +22,9 @@ export default new Vuex.Store({
       dialog:false
     },
        missingDialog: {
-      dialog:false
+         dialog: false,
+         mode: '',
+         report:null
     },
       successDialog: {
           visible:false,
@@ -123,9 +125,11 @@ export default new Vuex.Store({
       }
     },
 
-      SET_MISSING_REPORT_DIALOG(state, dialog) {
+      SET_MISSING_REPORT_DIALOG(state, payload) {
       state.missingDialog = {
-        dialog: dialog
+        dialog: payload.dialog,
+        mode: payload.mode,
+        report: payload.report
       }
     },
 
@@ -176,7 +180,15 @@ export default new Vuex.Store({
       state.MissingPersons = payload;
     },
     ADD_MISSING_REPORT(state, payload) {
-      state.MissingPersons = [...state.MissingPersons, payload];
+      if (payload.mode == 'add') {
+        state.MissingPersons = [...state.MissingPersons, payload.report];
+      } else {
+        //edit
+        var index = state.MissingPersons.findIndex(report => report.id == payload.report.id)
+
+        Vue.set(state.MissingPersons,index,payload.report)
+
+      }
     }
   },
   actions: {

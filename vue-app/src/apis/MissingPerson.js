@@ -6,8 +6,8 @@ export default {
     return Api().get('/missing/all');
   },
   //create
-  create(form) {
-    return Api().post('/missing/create', form, {
+  create(form,mode,id) {
+    return Api().post('/missing/create/'+mode+'/'+id, form, {
        headers:{
             'Content-Type': 'multipart/form-data'
           }

@@ -10,7 +10,7 @@ use Image;
 class MissingPersonController extends Controller
 {
 
-    public function store(Request $request){
+    public function store(Request $request, $mode, $id=null){
         $data = $this->validate($request,[
             'fname' => ['required','string'],
             'lname' => ['required','string'],
@@ -25,7 +25,7 @@ class MissingPersonController extends Controller
 
         //create report
 
-        $report = new MissingPerson;
+        $report = $mode == 'add' ?  new MissingPerson : MissingPerson::find($id);
         $report->fname = $data['fname'];
         $report->lname = $data['lname'];
         $report->gender = $data['gender'];
@@ -35,18 +35,20 @@ class MissingPersonController extends Controller
 
         $report->save();
         //address
-        $report->address()->create([
-                'city'=>$data['city'],
-                'parish'=>$data['parish'],
-                'street'=>$data['street'],
-        ]);
+
+
+
+        $report->address->city = $data['city'];
+        $report->address->parish = $data['parish'];
+        $report->address->street = $data['street'];
+        $report->address->save();
 
          //save images
              if($request->hasFile('image')){
                  $this->saveImage($report,$request->file('image'));
              }
 
-                  return MissingPerson::where('id',$report->id)->with(['address','image'])->first();
+         return MissingPerson::where('id',$report->id)->with(['address','image'])->first();
     }
 
 
@@ -68,9 +70,8 @@ class MissingPersonController extends Controller
                         // Put image to storage
                         $save = Storage::put("public/images/{$fileNameToStore}", $resize->__toString());
                     if($save){
-                        $report->image()->create([
-                            "path"=>$fileNameToStore
-                        ]);
+                        $report->image->path = $fileNameToStore;
+                        $report->image->save();
                     }
              }
 

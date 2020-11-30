@@ -36,7 +36,7 @@ Route::prefix('admin')->group(function(){
 //missing person
 Route::prefix('missing')->group(function(){
     Route::get('/all','MissingPersonController@allMissing');
-    Route::post('/create','MissingPersonController@store');
+    Route::post('/create/{mode}/{id?}','MissingPersonController@store');
     Route::delete('/delete/{id}','MissingPersonController@destroy');
 });
 
