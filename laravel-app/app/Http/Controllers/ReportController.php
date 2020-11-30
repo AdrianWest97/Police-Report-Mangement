@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-// use App\Mail\SendReference;
 use App\Notifications\ReportUpdate;
 use Illuminate\Http\Request;
 use App\Report;
@@ -11,6 +10,7 @@ use App\Witness;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
@@ -55,12 +55,15 @@ class ReportController extends Controller
                      "phone"=>$data['witnesses'][0]['phone'],
                 ]);
               }
-
               //email reference number
               $msg = "Your report has been submitted for review";
-              $this->emailReferenceNumber($ref_num,$msg);
+              try{
+              $this->emailReferenceNumber($ref_num,$msg,0);
+             return response(['reference_number'=>$ref_num]);
+              }catch(Exception $err){
+              return response(['reference_number'=>$ref_num]);
+              }
           }
-          return response(['reference_number'=>$ref_num]);
     }
 
     //generate unique reference number
@@ -68,11 +71,12 @@ class ReportController extends Controller
     return substr(md5(uniqid(mt_rand(), true)), 0, $l);
 }
 
-public function emailReferenceNumber($ref,$message){
+public function emailReferenceNumber($ref,$message,$status){
     $data = [
      "to" =>auth()->user()->email,
      "reference_number"=>strtoupper($ref),
-     "message"=>$message
+     "message"=>$message,
+     "status" => $status
     ];
     $user = User::find(auth()->id());
    $user->notify(new ReportUpdate($data));

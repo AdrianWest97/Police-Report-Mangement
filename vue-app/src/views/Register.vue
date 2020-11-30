@@ -2,7 +2,7 @@
     <v-container fluid fill-height>
       <v-row align="center" justify="center">
         <v-col cols="12" md="6" lg="7" sm="12">
-          <v-card elevation="2">
+          <v-card  outlined :loading="loader">
             <v-card-title class="headline font-weight-bolder">Create Account</v-card-title>
             <v-spacer></v-spacer>
             <v-card-text>
@@ -190,6 +190,7 @@
         color="primary"
         rounded
         large
+        :disabled="invalid"
       >
         Create account
       </v-btn>
@@ -240,6 +241,7 @@ export default {
         password: '',
         password_confirmation: ''
       },
+      loader:false,
       errors: []
     }
   },
@@ -247,15 +249,20 @@ export default {
   methods: {
      submit(){
       this.$refs.observer.validate();
+      this.register();
     },
     register () {
+      this.loader = true;
       User.register(this.form)
         .then(() => {
           this.$router.push({ name: 'Login' })
+         this.loader = false;
         })
         .catch(error => {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors
+            this.loader = false;
+
           }
         })
     }

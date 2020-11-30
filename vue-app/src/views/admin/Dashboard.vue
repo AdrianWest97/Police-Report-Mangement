@@ -78,7 +78,7 @@ export default {
       drawer: true,
        items: [
           { title: 'Dashboard', icon: 'mdi-view-dashboard',route:'/dashboard' },
-          { title: 'Pending Reports', icon: 'mdi-file-tree-outline',route:'/dashboard/pending-reports' },
+          { title: 'Pending Reports', icon: 'mdi-clock-time-eight-outline ',route:'/dashboard/pending-reports' },
           { title: 'Missing persons', icon: 'mdi-account-box',route:'/dashboard' },
           { title: 'Active Users', icon: 'mdi-account-group', route:'/dashboard/active-users' },
           { title: 'Logout', icon: 'mdi-logout', route:'/dashboard' },

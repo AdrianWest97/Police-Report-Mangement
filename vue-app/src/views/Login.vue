@@ -2,7 +2,7 @@
     <v-container fluid fill-height>
       <v-row align="center" justify="center">
         <v-col cols="12" md="6" lg="4" sm="12">
-          <v-card elevation="2">
+          <v-card  outlined  :loading="logginIn">
             <v-card-title class="headline font-weight-bolder">Login</v-card-title>
             <v-spacer></v-spacer>
             <v-card-text>
@@ -89,6 +89,7 @@ extend('required', {
 export default {
   data () {
     return {
+      logginIn:false,
       form: {
         email: '',
         password: ''
@@ -104,17 +105,21 @@ export default {
       this.login();
     },
     login () {
+      this.logginIn = true;
       User.login(this.form)
         .then(response => {
           this.$store.commit('LOGIN', true)
           localStorage.setItem('token', response.data)
           this.checkAdminRights();
+          this.logginIn = false;
         })
         .catch(error => {
           if (error.response.status === 422) {
             this.errors = error.response.data.errors
+            this.logginIn = false;
           }
         })
+
     },
     checkAdminRights(to, from, next) {
     // check if the user is admin

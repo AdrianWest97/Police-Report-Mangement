@@ -14,6 +14,7 @@ console.log(process.env)
 new Vue({
   store,
   router,
+  mode:'history',
   vuetify:new Vuetify,
   render: (h) => h(App),
 }).$mount("#app");

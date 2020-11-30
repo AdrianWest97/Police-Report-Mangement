@@ -13,7 +13,7 @@
         <v-skeleton-loader class="mx-auto"   type="article"
          ></v-skeleton-loader>
         </v-sheet>
-      <v-card v-else>
+      <v-card v-else :loading="loading">
         <v-card-title class="headline"> Respond </v-card-title>
         <v-card-subtitle> See report details and update status</v-card-subtitle>
         <v-divider></v-divider>

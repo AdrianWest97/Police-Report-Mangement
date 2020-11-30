@@ -17,6 +17,7 @@
       <v-chip
         :color="checkStatus(item.status).color"
         class="text-white"
+        small
       >
        {{checkStatus(item.status).value}}
       </v-chip>

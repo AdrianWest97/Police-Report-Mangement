@@ -9,13 +9,13 @@
        overlay-color="#8c95a6"
        persistent
        >
-       <v-card class="text-center p-5" v-if="getEditReport.report == null">
+       <v-card  class="text-center p-5" v-if="getEditReport.report == null">
            <v-card-text>
               Please wait...
              <v-progress-circular indeterminate></v-progress-circular>
            </v-card-text>
           </v-card>
-      <v-card v-else>
+      <v-card v-else :loading="loading">
         <v-card-title>
           <span class="text-small text-bolder">Edit Report</span>
         </v-card-title>
@@ -320,6 +320,7 @@ extend('required', {
        }
      },
      submit(){
+       this.loading = true;
      var form = {
        type:this.getEditReport.report.type.type,
        parish:this.getEditReport.report.address.parish,
@@ -333,12 +334,13 @@ extend('required', {
      }
       Report.update(form,this.getEditReport.report.id)
       .then((res) => {
+               this.loading = false;
         this.closeDialog();
             this.$store.commit('SET_SNACK_BAR',{
             visible:true,
             content:"Update success"
              })
-      });
+      }).catch((err)=>        this.loading = true)
      },
      		formatDate(date) {
 			if (!date) return null;

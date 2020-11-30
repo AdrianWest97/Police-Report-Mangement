@@ -2,12 +2,12 @@
 <div>
   <v-row justify="center">
     <v-dialog v-model="reportDialog.dialog"
-       scrollable max-width="700px"
+       scrollable max-width="750px"
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
        >
-      <v-card>
+      <v-card :loading="loading">
         <v-card-title>
           <span class="text-small text-bolder">New Police Report</span>
         </v-card-title>
@@ -45,7 +45,8 @@
                 sm="6"
                 md="6"
               >
-                    <v-menu
+    <validation-provider name="date" rules="required">
+      <v-menu
         v-model="menu2"
         :close-on-content-click="false"
         :nudge-right="40"
@@ -68,6 +69,7 @@
           @input="menu2 = false"
         ></v-date-picker>
       </v-menu>
+    </validation-provider>
               </v-col>
 
                   </v-row>
@@ -148,6 +150,7 @@
                      row-height="50"
                     auto-grow
                     label="Details"
+                   filled
                     class="mt-1"
                     v-model="form.details"
                     slot-scope="{ errors }"
@@ -211,6 +214,7 @@
                     rows="2"
                      row-height="50"
                     auto-grow
+                    filled
                     label="Additional information"
                     class="mt-1"
                     v-model="form.additional"
