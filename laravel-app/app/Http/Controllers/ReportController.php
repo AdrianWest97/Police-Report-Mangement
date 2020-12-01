@@ -10,6 +10,7 @@ use App\Witness;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\User;
+use App\Address;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -186,5 +187,15 @@ public function emailReferenceNumber($ref,$message,$status){
         return response(['reports' => DB::table('notifications')->get()->filter(function($data) use ($ref){
            return json_decode($data->data)->reference_number == strtolower($ref);
         })]);
+    }
+
+
+    public function parishStatistic($parish){
+        $report = ReportType::with('reports',function($q){
+            $q->whereHas('address',function($q){
+                $q->where('parish','Hanover');
+            });
+        })->get();
+        return response($report);
     }
 }

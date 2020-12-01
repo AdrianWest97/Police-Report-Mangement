@@ -183,7 +183,7 @@
         <div class="form-group">
          <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
         </div>
-      <v-col cols="12" class="d-flex justify-content-end">
+      <v-col cols="12" class="d-flex justify-content-between">
        <v-btn
         class="mr-4"
         type="submit"
@@ -194,6 +194,8 @@
       >
         Create account
       </v-btn>
+
+      <router-link to="/login" class="font-weight-bold">Sign in instead</router-link>
       </v-col>
       </v-row>
 

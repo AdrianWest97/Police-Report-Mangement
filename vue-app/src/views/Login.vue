@@ -48,7 +48,9 @@
         <div class="form-group">
          <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
         </div>
-        <v-btn
+
+    <div class="d-flex justify-content-between">
+             <v-btn
         class="mr-4"
         type="submit"
         :disabled="invalid"
@@ -57,6 +59,9 @@
       >
         Login
       </v-btn>
+
+      <router-link to="/register" class="font-weight-bold">Create Account</router-link>
+    </div>
     </form>
           </validation-observer>
             </v-card-text>

@@ -49,5 +49,9 @@ getActiveUsers() {
   },
   getStatus($ref) {
     return Api().get('/status/'+$ref)
+  },
+
+  getParishStatistic(parish) {
+    return Api().get('/parish_statistic/'+parish)
   }
 }

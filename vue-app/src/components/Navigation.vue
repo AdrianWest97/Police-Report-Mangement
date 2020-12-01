@@ -70,7 +70,7 @@ export default {
 }
 
 a {
-    color: #428BCA !important;
+    color: grey !important;
     text-decoration: none;
 }
 </style>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 //no auth required
 Route::get('/status/{ref}','ReportController@ReportStatus');
     Route::get('/missing/all','MissingPersonController@allMissing');
+    Route::get('/parish_statistic/{parish}','ReportController@parishStatistic');
 
 
 

@@ -7,7 +7,7 @@
       <div class="col-12 text-center">
         <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Report <span class="text-danger">Online</span></h1>
         <p class="lead">Creating a safer Jamaica for all</p>
-        <v-btn @click="$vuetify.goTo('#start')" rounded color="info" x-large>Get Started</v-btn>
+        <v-btn @click="$vuetify.goTo('#start')" rounded outlined color="grey" x-large>Get Started</v-btn>
       </div>
     </div>
   </div>
@@ -25,8 +25,7 @@
          <h4 class="font-weight-bolder">Find your area</h4>
        <p>Find out local information about where you live including
  crime statistics and where your closest station is.</p>
-     <v-text-field label="Another input" rounded filled></v-text-field>
-
+   <parish-statistics></parish-statistics>
       </div>
     </div>
   </div>
@@ -85,16 +84,19 @@
       </v-row>
   </v-container>
 </section>
+
 </div>
 </template>
 
 <script>
 import Navigation from '../components/Navigation'
+import ParishStatistics from '../components/ParishStatistics.vue'
 
 export default {
   name: 'Home',
   components: {
-    Navigation
+    Navigation,
+    ParishStatistics
   }
 }
 </script>

@@ -35,11 +35,22 @@
         </template>
 
         <template v-slot:top>
+             <v-toolbar
+                flat
+              >
+        <p>{{getAllMissing.length}} found</p>
+          <v-spacer></v-spacer>
+
         <v-text-field
           v-model="search"
           label="Search...."
-          class="mx-4"
-        ></v-text-field>
+          dense
+        >
+                <template slot="append">
+           <v-icon medium> mdi-magnify </v-icon>
+      </template>
+        </v-text-field>
+             </v-toolbar>
       </template>
                   <template v-slot:item.parish="{ item }">
                     {{item.address.parish}}

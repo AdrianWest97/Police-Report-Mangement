@@ -28,7 +28,6 @@ const routes = [
         path: '/missing',
         name: 'missing-list',
         component: MissingList,
-         meta: { guestOnly: true }
       },
   {
     path: '/',
