@@ -1,7 +1,7 @@
 <template>
 
   <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top"  style="z-index:1">
+<nav class="navbar navbar-expand-lg p-0 navbar-light bg-light shadow-sm fixed-top"  style="z-index:1">
   <div class="container">
     <router-link to="/" class="font-weight-bold text--darken-1">REPORT <span class="text-danger"> CRIME</span> ONLINE</router-link>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,11 +17,15 @@
         <li class="nav-item">
           <router-link v-if="!isLoggedIn" to="/login" class="nav-link" href="#">Login</router-link>
         </li>
+
           <li class="nav-item">
           <router-link v-if="!isLoggedIn" to="/register"  class="nav-link" href="#">Register</router-link>
         </li>
          <li class="nav-item">
           <a v-if="isLoggedIn" href="#"  class="nav-link" @click.prevent="logout()">Logout</a>
+        </li>
+           <li class="nav-item">
+          <router-link v-if="isLoggedIn" to="/profile"  class="nav-link">Settings</router-link>
         </li>
       </ul>
     </div>

@@ -224,8 +224,8 @@
                     <v-checkbox required v-model="form.accepted_terms">
                     <template v-slot:label>
                          By clicking submit, you certify that all the given information is true and correct.
-      </template>
-    </v-checkbox>
+                        </template>
+                      </v-checkbox>
                   	</validation-provider>
                     </v-row>
                   </v-card-title>
@@ -333,8 +333,12 @@ extend('required', {
      submit(){
       this.loading = true;
        this.$refs.observer.validate();
+       if(this.form.witnesses.length > 0){
+         this.form.witnesses = JSON.stringify(this.form.witnesses)
+       }
         Api().post("/create",this.form)
         .then((response) => {
+          console.log(response.data)
           this.loading = false;
           //close form
           this.closeDialog();

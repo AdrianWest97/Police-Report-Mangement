@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Notification;
 class ReportController extends Controller
 {
 
+
+
     public function store(Request $request){
            $data = $this->validate($request,[
             "type" => ['required','string'],
@@ -30,10 +32,15 @@ class ReportController extends Controller
             "date"=>['required','date'],
             "witnesses"=>['nullable']
           ]);
+
+         $witnesses = null;
+         if($data['witnesses'] != null){
+              $witnesses = $this->toArray($data['witnesses'])[0];
+         }
           $report = new Report;
           $report->report_type_id = ReportType::where('type',$data['type'])->first()->id;
           $report->details = $data['details'];
-          $report->additional = $data['additional'];
+          $report->additional = $data['additional'] ;
           $report->hasWitness = $data['hasWitness'];
           $report->date = $data['date'];
           $report->user_id = auth()->user()->id;
@@ -52,8 +59,8 @@ class ReportController extends Controller
               ]);
               if($data['witnesses']){
                 $report->witnesses()->create([
-                     "name"=>$data['witnesses'][0]['name'],
-                     "phone"=>$data['witnesses'][0]['phone'],
+                     "name"=>$witnesses['name'],
+                     "phone"=>$witnesses['phone'],
                 ]);
               }
               //email reference number

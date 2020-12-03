@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 //no auth required
 Route::get('/status/{ref}','ReportController@ReportStatus');
-    Route::get('/missing/all','MissingPersonController@allMissing');
-    Route::get('/parish_statistic/{parish}','ReportController@parishStatistic');
+Route::get('/missing/all','MissingPersonController@allMissing');
+Route::get('/parish_statistic/{parish}','ReportController@parishStatistic');
+Route::get('/test',function(){
+    return "hello from api";
+});
 
 
 
@@ -24,7 +27,7 @@ Route::get('/chart-by-type', 'ReportController@reportByTypeChart');
 Route::get('/chart-by-parish', 'ReportController@chartByParish');
 
 Route::get('/user',function(Request $request){
-return $request->user();
+return $request->user()->load('address');
 });
 
 

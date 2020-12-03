@@ -5,7 +5,7 @@
   <div class="container h-100">
     <div class="row h-100 align-items-center">
       <div class="col-12 text-center">
-        <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Report <span class="text-danger">Online</span></h1>
+        <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Crime Reporting <span class="text-danger">Online</span></h1>
         <p class="lead">Creating a safer Jamaica for all</p>
         <v-btn @click="$vuetify.goTo('#start')" rounded outlined color="grey" x-large>Get Started</v-btn>
       </div>

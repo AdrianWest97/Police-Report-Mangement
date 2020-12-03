@@ -17,7 +17,8 @@ class Report extends Model
     protected $fillable =[
         'details',
         'date',
-        'reference_number'
+        'reference_number',
+        'additional'
     ];
 
 //location of crime

@@ -14,7 +14,7 @@ class RegisterController extends Controller
             'name' => ['required','string'],
             'phone' => ['required','string'],
             'street' => ['required','string'],
-            'cty' => ['required','string'],
+            'city' => ['required','string'],
             'parish' => ['required','string'],
             'trn' => ['required','numeric'],
             'email' => ['required', 'email', 'unique:users'],

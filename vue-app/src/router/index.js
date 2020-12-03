@@ -14,6 +14,7 @@ import User from '../apis/User'
 import NotFound from '../views/NotFound.vue'
 import store from '../store'
 import MissingList from '../views/MissingPersonList'
+import ProfilePage from '../views/user/profile';
 
 
 Vue.use(VueRouter)
@@ -33,6 +34,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+    {
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage
   },
   {
     path: '/login',
