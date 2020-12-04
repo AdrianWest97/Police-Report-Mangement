@@ -15,7 +15,7 @@ class AdminController extends Controller
         $reports = Report::where('status',0)
         ->orWhere('status',1)
         ->with(['address','user','type'])
-        ->orderBy('created_at','asc')
+        ->orderBy('created_at','desc')
         ->get();
         return response(['reports'=>$reports]);
     }

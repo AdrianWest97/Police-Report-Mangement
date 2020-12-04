@@ -98,8 +98,7 @@ import Report from "../apis/Report"
        this.isSearching = true;
        this.empty = null;
        Report.getStatus(this.search).then((res=>{
-         this.results = res.data.reports;
-         console.log(this.results.length)
+         this.results = Object.values(res.data.reports);
         if(this.results.length < 1){
           this.empty = true;
         }

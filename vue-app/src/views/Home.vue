@@ -5,9 +5,9 @@
   <div class="container h-100">
     <div class="row h-100 align-items-center">
       <div class="col-12 text-center">
-        <h1 class="text-bold font-weight-bolder text-white-50" >Jamaica Crime Reporting <span class="text-danger">Online</span></h1>
-        <p class="lead">Creating a safer Jamaica for all</p>
-        <v-btn @click="$vuetify.goTo('#start')" rounded outlined color="grey" x-large>Get Started</v-btn>
+        <h1 class="text-bold font-weight-bolder text-white" >Jamaica Crime Reporting <span class="text-danger">Online</span></h1>
+        <p class="lead text-white">Creating a safer Jamaica for all</p>
+        <v-btn @click="$vuetify.goTo('#start')" rounded outlined color="white" x-large>Get Started</v-btn>
       </div>
     </div>
   </div>
@@ -105,10 +105,18 @@ export default {
 .masthead {
   height: 100vh;
   min-height: 500px;
-  //  background-image: url('https://source.unsplash.com/BtbjCFUvBXs/1920x1080');
-  // background-size: cover;
-  // background-position: center;
-  // background-repeat: no-repeat;
+  //  background-image: url('../assets/img/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+   background:
+    linear-gradient(
+     rgba(0,0,0,0.6),
+     rgba(0,0,0,0.6),
+    ),
+    url('../assets/img/bg.jpg');
+  background-position: center center;
+  background-size: cover;
 }
 
 </style>

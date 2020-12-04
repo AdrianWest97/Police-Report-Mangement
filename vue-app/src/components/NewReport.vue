@@ -162,7 +162,7 @@
                       <v-col cols="12">
                    <v-checkbox
                   v-model="form.hasWitness"
-                  :label="'Where there any witneeses to the inccident? '"
+                  :label="'Were there any witneeses to the inccident? '"
                   class="m-0 p-0"
                 ></v-checkbox>
 

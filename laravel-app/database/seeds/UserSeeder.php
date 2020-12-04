@@ -25,24 +25,7 @@ class UserSeeder extends Seeder
              'trn'=>126483456,
 
         ]);
-        User::create([
-             'name'=>"Kayla White",
-             'trn'=>128483456,
-            'email'=>"kwhite@gmail.com",
-            'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-        ]);
-        User::create([
-             'name'=>"James Brian",
-             'trn'=>228483456,
-            'email'=>"james@gmail.com",
-            'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-        ]);
-           User::create([
-             'name'=>"Simon Mullings",
-             'trn'=>525483456,
-            'email'=>"simon@gmail.com",
-            'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-        ]);
+
            User::create([
              'name'=>"Romaine Brown",
              'trn'=>244483455,
@@ -56,9 +39,9 @@ class UserSeeder extends Seeder
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
                    User::create([
-             'name'=>"Adrian West",
+             'name'=>"Creg Simpson",
              'trn'=>225423456,
-            'email'=>"sanique@.com",
+            'email'=>"sanique@gmail.com",
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
                    User::create([
