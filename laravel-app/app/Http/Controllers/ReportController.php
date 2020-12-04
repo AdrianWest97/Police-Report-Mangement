@@ -34,7 +34,7 @@ class ReportController extends Controller
           ]);
 
          $witnesses = null;
-         if($data['witnesses'] != null){
+         if($data['hasWitness'] && $data['witnesses'] != null){
               $witnesses = $this->toArray($data['witnesses'])[0];
          }
           $report = new Report;
@@ -57,7 +57,7 @@ class ReportController extends Controller
                 'parish'=>$data['parish'],
                 'street'=>$data['street'],
               ]);
-              if($data['witnesses']){
+              if($data['hasWitness'] ){
                 $report->witnesses()->create([
                      "name"=>$witnesses['name'],
                      "phone"=>$witnesses['phone'],
@@ -66,7 +66,7 @@ class ReportController extends Controller
               //email reference number
               $msg = "Your report has been submitted for review";
               try{
-              $this->emailReferenceNumber($ref_num,$msg,0);
+              $this->emailReferenceNumber($ref_num,$msg,"pending");
              return response(['reference_number'=>$ref_num]);
               }catch(Exception $err){
               return response(['reference_number'=>$ref_num]);

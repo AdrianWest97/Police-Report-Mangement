@@ -326,8 +326,21 @@ extend('required', {
      },
      closeDialog(){
        this.loading = false;
+      this.$refs.observer.reset()
       this.$refs.form.reset()
-       this.$refs.observer.reset()
+      this.form = {
+      date: new Date().toISOString().substr(0, 10),
+        now:false,
+        parish:'',
+        city:'',
+        street:'',
+        type:'',
+        details:'',
+        accepted_terms:false,
+        hasWitness:false,
+        witnesses:[],
+        additional:''
+       }
        this.$store.commit('SET_REPORT_DIALOG',false)
      },
      submit(){
@@ -338,7 +351,6 @@ extend('required', {
        }
         Api().post("/create",this.form)
         .then((response) => {
-          console.log(response.data)
           this.loading = false;
           //close form
           this.closeDialog();

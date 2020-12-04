@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Address;
 use Illuminate\Http\Request;
 use App\MissingPerson;
 use Illuminate\Support\Facades\Storage;
@@ -32,17 +33,17 @@ class MissingPersonController extends Controller
         $report->age = $data['age'] ?  $data['age'] : null;
         $report->attributes = $data['attributes'] ?  $data['attributes'] : null;
         $report->last_seen_details = $data['last_seen_details'];
-
         $report->save();
         //address
 
+        $report->address()->updateOrCreate(
+            ["addressable_id" => $report->id],
+            [
+            "city" => $data['city'],
+            "parish" => $data['parish'],
+            "street" => $data['street'],
 
-
-        $report->address->city = $data['city'];
-        $report->address->parish = $data['parish'];
-        $report->address->street = $data['street'];
-        $report->address->save();
-
+        ]);
          //save images
              if($request->hasFile('image')){
                  $this->saveImage($report,$request->file('image'));
@@ -53,6 +54,7 @@ class MissingPersonController extends Controller
 
 
         public function saveImage($report, $file){
+              $destination = "public/images/";
               $filenameWithExt = $file->getClientOriginalName();
                 $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
                  $filename = preg_replace("/[^A-Za-z0-9 ]/", '', $filename);
@@ -68,10 +70,14 @@ class MissingPersonController extends Controller
                         // Prepare qualified image name
                         $image = $hash."jpg";
                         // Put image to storage
-                        $save = Storage::put("public/images/{$fileNameToStore}", $resize->__toString());
+                        $save = Storage::put("{$destination}{$fileNameToStore}", $resize->__toString());
                     if($save){
-                        $report->image->path = $fileNameToStore;
-                        $report->image->save();
+
+                        $report->image()->updateOrCreate(
+                            ['imageable_id'=> $report->id],
+                            [
+                            'path' =>  "/images/".$fileNameToStore
+                        ]);
                     }
              }
 

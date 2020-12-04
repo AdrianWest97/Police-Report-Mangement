@@ -381,7 +381,7 @@ export default {
       street:this.missingReportDialog.report.address.street,
       last_seen_details:this.missingReportDialog.report.last_seen_details,
     }
-    this.temp_img = 'http://localhost:8000/storage/images/'+this.missingReportDialog.report.image.path
+    this.temp_img = 'http://localhost:8000/storage/'+this.missingReportDialog.report.image.path
      },
      closeDialog(){
        this.loading = false;

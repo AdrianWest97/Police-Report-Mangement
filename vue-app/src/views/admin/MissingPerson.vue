@@ -154,7 +154,7 @@ methods:{
  },
 
 loadImage(image){
-return 'http://localhost:8000/storage/images/'+image
+return 'http://localhost:8000/storage/'+image
 },
 
  editItem (item) {

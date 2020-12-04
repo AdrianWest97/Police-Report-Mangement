@@ -33,7 +33,7 @@
            <img src="../../assets/svg/report.svg" alt="track"/>
          </div>
       <h3>Make a Report</h3>
-       <p class="small">Make a report of a crime or suspicious activities</p>
+       <p class="small">Make a report of a crime or suspicious activities.</p>
       </div>
     </a>
 
@@ -53,10 +53,10 @@
 		<router-link to="/report/my-reports" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
-           <img src="../../assets/svg/delivery.svg" alt="track"/>
+           <img src="../../assets/svg/document.svg" alt="track"/>
          </div>
       <h3>My Reports</h3>
-       <p class="small">Track your report progress to see when it has been approved.</p>
+       <p class="small">View your report status and edit.</p>
       </div>
     </router-link>
 </v-col>

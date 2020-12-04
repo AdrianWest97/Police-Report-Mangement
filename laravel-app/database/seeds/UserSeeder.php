@@ -26,9 +26,9 @@ class UserSeeder extends Seeder
 
         ]);
         User::create([
-             'name'=>"Adrian West",
+             'name'=>"Kayla White",
              'trn'=>128483456,
-            'email'=>"westsparta@gmail.com",
+            'email'=>"kwhite@gmail.com",
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
         User::create([
@@ -38,9 +38,9 @@ class UserSeeder extends Seeder
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
            User::create([
-             'name'=>"Gary Roberts",
+             'name'=>"Simon Mullings",
              'trn'=>525483456,
-            'email'=>"gary@gmail.com",
+            'email'=>"simon@gmail.com",
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
            User::create([
@@ -50,13 +50,13 @@ class UserSeeder extends Seeder
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
            User::create([
-             'name'=>"Simone walker",
+             'name'=>"Aurbey walker",
              'trn'=>225468456,
             'email'=>"simone@.com",
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
         ]);
                    User::create([
-             'name'=>"Sanique west",
+             'name'=>"Adrian West",
              'trn'=>225423456,
             'email'=>"sanique@.com",
             'password'=>"$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",

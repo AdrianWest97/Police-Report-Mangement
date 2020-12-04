@@ -27,7 +27,7 @@
   >
        <template v-slot:item.image="{ item }">
                <v-img
-               :src="'http://localhost:8000/storage/images/'+item.image.path"
+               :src="'http://localhost:8000/storage/'+item.image.path"
                contain
                 :aspect-ratio=".5"
                 width="200"
