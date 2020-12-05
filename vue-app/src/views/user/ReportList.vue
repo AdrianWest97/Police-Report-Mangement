@@ -40,7 +40,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -161,7 +161,8 @@ export default {
        deleteItemConfirm () {
        Report.delete(this.reports[this.editedIndex].id)
         .then((res)=>{
-                this.reports.splice(this.editedIndex,1)
+          this.reports.splice(this.editedIndex,1);
+          this.editedIndex = -1;
                 this.$store.commit('SET_SNACK_BAR',{
                     visible:true,
                     content:"Item deleted",
@@ -194,7 +195,7 @@ if(status == 2){
         this.dialogDelete = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          // this.editedIndex = -1
         })
       },
   },

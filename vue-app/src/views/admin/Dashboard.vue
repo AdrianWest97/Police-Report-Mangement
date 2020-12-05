@@ -35,7 +35,7 @@
       </v-list>
     </v-navigation-drawer>
      <div class="container-fluid grey lighten-4 h-screen">
-     <v-row v-if="$route.path === '/dashboard'">
+     <v-row  v-if="$route.path === '/dashboard'">
      <card v-for="card in cards" :key="card.text" :text="card.text" :icon="card.icon" :value="card.value">
      </card>
           <v-col cols="12" sm="3">

@@ -75,7 +75,7 @@
     <v-list-item two-line>
       <v-list-item-content>
         <v-list-item-title>Additional details</v-list-item-title>
-        <v-list-item-subtitle  style="white-space:normal;"><truncate clamp="Read More" less="Show Less" :text="getRespondDialog.report.additional"></truncate></v-list-item-subtitle>
+        <v-list-item-subtitle  style="white-space:normal;"><truncate clamp="Read More" less="Show Less" :text="getRespondDialog.report.additional ? getRespondDialog.report.additional.toString() : ''"></truncate></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
 
@@ -149,10 +149,10 @@
 <script>
 import { mapGetters } from 'vuex';
 import truncate from 'vue-truncate-collapsed';
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+import { ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import Report from '../../apis/Report';
 import SnackBar from '../SnackBar.vue';
-
+setInteractionMode('eager');
 
   export default {
   data:()=> ({

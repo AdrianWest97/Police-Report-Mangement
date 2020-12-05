@@ -10,6 +10,13 @@
       <v-card :loading="loading">
         <v-card-title>
           <span class="text-small text-bolder">New Police Report</span>
+          <v-spacer></v-spacer>
+  <v-switch v-model="form.anonymous">
+      <template v-slot:label>
+        Anonymous report?
+         <v-icon small>mdi-help-circle</v-icon>
+      </template>
+    </v-switch>
         </v-card-title>
         <v-divider></v-divider>
                 <v-card-text>
@@ -166,7 +173,7 @@
                   class="m-0 p-0"
                 ></v-checkbox>
 
-                      <ul v-show="form.hasWitness && form.witnesses.length > 0" class="list-group m-0 mb-2 p-0" v-for="(witness,index) in form.witnesses" :key="index">
+                      <ul v-show="form.hasWitness && temp_witnesses.length > 0" class="list-group m-0 mb-2 p-0" v-for="(witness,index) in temp_witnesses" :key="index">
                           <transition name="fade">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                          <span class="text-bold">{{witness.name.toUpperCase()}}</span>
@@ -243,7 +250,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="success"
+            color="primary"
            :loading="loading"
             type="submit"
             :disabled="invalid"
@@ -296,11 +303,13 @@ extend('required', {
         street:'',
         type:'',
         details:'',
-        accepted_terms:false,
+        accepted_terms:null,
         hasWitness:false,
         witnesses:[],
-        additional:''
+        additional:'',
+        anonymous:false
        },
+      temp_witnesses:[],
        temp_name:'',
        temp_phone:'',
       	menu: false,
@@ -316,7 +325,7 @@ extend('required', {
      },
      addWitness(){
        if(this.temp_name != "" && this.temp_phone !=""){
-         this.form.witnesses = [...this.form.witnesses,{
+         this.temp_witnesses = [...this.temp_witnesses,{
            name:this.temp_name,
            phone:this.temp_phone
          }]
@@ -328,26 +337,14 @@ extend('required', {
        this.loading = false;
       this.$refs.observer.reset()
       this.$refs.form.reset()
-      this.form = {
-      date: new Date().toISOString().substr(0, 10),
-        now:false,
-        parish:'',
-        city:'',
-        street:'',
-        type:'',
-        details:'',
-        accepted_terms:false,
-        hasWitness:false,
-        witnesses:[],
-        additional:''
-       }
+       this.temp_witnesses = [];
        this.$store.commit('SET_REPORT_DIALOG',false)
      },
      submit(){
       this.loading = true;
        this.$refs.observer.validate();
-       if(this.form.witnesses.length > 0){
-         this.form.witnesses = JSON.stringify(this.form.witnesses)
+       if(this.temp_witnesses.length > 0){
+         this.form.witnesses = JSON.stringify(this.temp_witnesses)
        }
         Api().post("/create",this.form)
         .then((response) => {

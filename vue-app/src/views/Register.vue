@@ -179,7 +179,6 @@
         ></v-text-field>
       </validation-provider>
         </v-col>
-
         <div class="form-group">
          <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
         </div>
@@ -241,7 +240,8 @@ export default {
         city:'',
         parish:'',
         password: '',
-        password_confirmation: ''
+        password_confirmation: '',
+        anonymous:false
       },
       loader:false,
       errors: []

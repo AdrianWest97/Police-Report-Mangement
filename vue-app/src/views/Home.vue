@@ -34,8 +34,8 @@
 <section class="py-5 bg" >
   <v-container>
     <h4 class="font-weight-bolder">What else we can help with?</h4>
-    <v-row>
-    <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
+    <v-row dense>
+    <v-col  cols="12" md="6" lg="4" sm="12" >
 		<router-link to="/report" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
@@ -46,7 +46,7 @@
       </div>
     </router-link>
 </v-col>
-    <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
+    <v-col  cols="12" md="6" lg="4" sm="12">
 		<a href="#" @click="$store.dispatch('showTrackReportDialog')" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
@@ -58,7 +58,7 @@
 		</a>
 </v-col>
 
-    <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
+    <v-col  cols="12" md="6" lg="4" sm="12">
 		<router-link to="/missing" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
@@ -69,7 +69,7 @@
       </div>
     </router-link>
 </v-col>
-    <v-col  cols="12" md="6" lg="4" sm="12"  id="report-card">
+    <v-col  cols="12" md="6" lg="4" sm="12">
 		<router-link to="/dashboard/report" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">

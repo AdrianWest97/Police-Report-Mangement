@@ -24,7 +24,7 @@
     </template>
 
     <template v-slot:item.email="{ item }">
-       {{item.user.email}}
+       {{item.anonymous ? "Anonymous" : item.user.email}}
     </template>
 
         <template v-slot:item.type="{ item }">
@@ -32,7 +32,8 @@
     </template>
 
        <template v-slot:item.name="{ item }">
-       {{item.user.name}}
+             {{item.anonymous ? "Anonymous" : item.user.name}}
+
     </template>
 
     <template v-slot:top>
@@ -61,6 +62,10 @@
                {{ item.reference_number.toUpperCase() }}
         </template>
 
+
+   <template v-slot:item.witnesses="{ item }">
+               {{ item.witnesses.length }}
+        </template>
         <template v-slot:item.actions="{ item }">
                 <v-icon
                 class="mr-2"
@@ -101,6 +106,7 @@ export default {
         {text: 'Date',align: 'start',value: 'date'},
         { text: 'id', value: 'id', align:'d-none' },
         { text: 'Reference #',  value: 'reference_number' },
+        {text: 'Witnesses', value:'witnesses',align:'d-none'},
         { text: 'Name', value: 'name' },
         { text: 'Email', value: 'email' },
         { text: 'Phone', value: 'phone' },

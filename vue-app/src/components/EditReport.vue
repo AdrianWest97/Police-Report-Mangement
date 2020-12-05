@@ -17,7 +17,7 @@
           </v-card>
       <v-card v-else :loading="loading">
         <v-card-title>
-          <span class="text-small text-bolder">Edit Report</span>
+          <span class="text-small text-bolder">Edit Report #{{getEditReport.report.reference_number.toUpperCase()}}</span>
         </v-card-title>
         <v-divider></v-divider>
                 <v-card-text>
@@ -241,7 +241,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="success"
+            color="primary"
             :text="false"
            :loading="loading"
             type="submit"
@@ -329,7 +329,7 @@ extend('required', {
        details:this.getEditReport.report.details,
        additional:this.getEditReport.report.additional,
        hasWitness:this.getEditReport.report.hasWitness,
-       witnesses:this.getEditReport.report.witnesses,
+       witnesses:JSON.stringify(this.getEditReport.report.witnesses),
        date:this.getEditReport.report.date
      }
       Report.update(form,this.getEditReport.report.id)

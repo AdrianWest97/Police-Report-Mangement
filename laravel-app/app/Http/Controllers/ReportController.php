@@ -30,19 +30,24 @@ class ReportController extends Controller
             "additional"=>['nullable'],
             "hasWitness"=>['nullable','boolean'],
             "date"=>['required','date'],
-            "witnesses"=>['nullable']
+            "witnesses"=>['nullable'],
+            "anonymous"=>['nullable']
           ]);
 
          $witnesses = null;
          if($data['hasWitness'] && $data['witnesses'] != null){
-              $witnesses = $this->toArray($data['witnesses'])[0];
+              $witnesses = $this->toArray($data['witnesses']);
          }
+
+
+
           $report = new Report;
           $report->report_type_id = ReportType::where('type',$data['type'])->first()->id;
           $report->details = $data['details'];
           $report->additional = $data['additional'] ;
-          $report->hasWitness = $data['hasWitness'];
+          $report->hasWitness = !empty($witnesses);
           $report->date = $data['date'];
+          $report->anonymous = $data['anonymous'];
           $report->user_id = auth()->user()->id;
           //add reference number
              $ref_num = $this->unique_id(6);
@@ -57,12 +62,14 @@ class ReportController extends Controller
                 'parish'=>$data['parish'],
                 'street'=>$data['street'],
               ]);
-              if($data['hasWitness'] ){
+              if(!empty($witnesses)){
+                foreach($witnesses as $witness){
                 $report->witnesses()->create([
-                     "name"=>$witnesses['name'],
-                     "phone"=>$witnesses['phone'],
+                     "name"=>$witness['name'],
+                     "phone"=>$witness['phone'],
                 ]);
               }
+            }
               //email reference number
               $msg = "Your report has been submitted for review";
               try{
@@ -103,11 +110,17 @@ public function emailReferenceNumber($ref,$message,$status){
             "witnesses"=>['nullable']
           ]);
 
+
+          $witnesses = null;
+         if($data['hasWitness'] && $data['witnesses'] != null){
+              $witnesses = $this->toArray($data['witnesses']);
+         }
+
           $report = Report::find($id);
           $report->report_type_id = ReportType::where('type',$data['type'])->first()->id;
           $report->details = $data['details'];
           $report->additional = $data['additional'];
-          $report->hasWitness = sizeof($data['witnesses']) > 0 ? true : false;
+          $report->hasWitness = !empty($witnesses);
           $report->date = $data['date'];
           if($report->save()){
               //add location
@@ -116,14 +129,17 @@ public function emailReferenceNumber($ref,$message,$status){
                 'parish'=>$data['parish'],
                 'street'=>$data['street'],
               ]);
-              if($data['hasWitness'] && sizeof($data['witnesses'])!=0){
-                $report->witnesses()->updateOrCreate([
-                    ['report_id'],
-                     "name"=>$data['witnesses'][0]['name'],
-                     "phone"=>$data['witnesses'][0]['phone'],
-                ]);
 
+                     if(!empty($witnesses)){
+                foreach($witnesses as $witness){
+                $report->witnesses()->create([
+                     "name"=>$witness['name'],
+                     "phone"=>$witness['phone'],
+                ]);
               }
+            }
+
+
           }
           return response(['success'=>true]);
     }
@@ -137,7 +153,7 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function report($id){
-        return response(['report'=>Report::where('id',$id)->with(['address','type','witnesses'])->first()]);
+        return Report::where('id',$id)->with(['address','type','witnesses'])->first();
     }
 
         public function toArray($data){
@@ -146,8 +162,7 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function destroy(Request $request, $id){
-        $report = Report::find($id);
-        return response(['deleted'=>$report->delete()]);
+        return Report::find($id)->delete();
     }
 
     public function getEdit($id){

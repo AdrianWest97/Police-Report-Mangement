@@ -18,7 +18,8 @@ class Report extends Model
         'details',
         'date',
         'reference_number',
-        'additional'
+        'additional',
+        'anonymous'
     ];
 
 //location of crime

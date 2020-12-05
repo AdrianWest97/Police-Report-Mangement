@@ -24,6 +24,7 @@ class CreateModelReportsTable extends Migration
             $table->boolean("hasWitness")->default(false);
             $table->string("reference_number");
             $table->integer("user_id");
+            $table->boolean("anonymous")->default(false);
         });
     }
 

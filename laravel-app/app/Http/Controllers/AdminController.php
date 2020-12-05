@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function all(){
         $reports = Report::where('status',0)
         ->orWhere('status',1)
-        ->with(['address','user','type'])
+        ->with(['address','user','type','witnesses'])
         ->orderBy('created_at','desc')
         ->get();
         return response(['reports'=>$reports]);
