@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Notifications\ReportUpdate;
-use App\Mail\ReportUpdate as sendMail;
 use App\Report;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use App\User;
 use Exception;
 

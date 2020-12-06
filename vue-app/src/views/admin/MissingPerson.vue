@@ -154,7 +154,7 @@ methods:{
  },
 
 loadImage(image){
-return 'http://localhost:8000/storage/'+image
+return `${process.env.APP_URL}/storage/${image}`
 },
 
  editItem (item) {

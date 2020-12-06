@@ -334,8 +334,8 @@ extend('required', {
        }
      },
      closeDialog(){
-       this.loading = false;
-      this.$refs.observer.reset()
+      this.loading = false;
+      this.form.anonymous = false;
       this.$refs.form.reset()
        this.temp_witnesses = [];
        this.$store.commit('SET_REPORT_DIALOG',false)
@@ -350,7 +350,6 @@ extend('required', {
         .then((response) => {
           this.loading = false;
           //close form
-          this.closeDialog();
           //show success
           this.$store.commit('SET_SUCCESS_DIALOG',{
           content:response.data.reference_number,
@@ -358,6 +357,7 @@ extend('required', {
           visible:true,
           title:'Success'
         });
+          this.closeDialog();
         })
      },
    },

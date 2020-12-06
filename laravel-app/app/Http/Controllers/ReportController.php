@@ -7,13 +7,10 @@ use Illuminate\Http\Request;
 use App\Report;
 use App\ReportType;
 use App\Witness;
-use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
 use App\User;
-use App\Address;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class ReportController extends Controller
 {
@@ -93,7 +90,8 @@ public function emailReferenceNumber($ref,$message,$status){
      "message"=>$message,
      "status" => $status
     ];
-    $user = User::find(auth()->id());
+   $user = User::find(auth()->id());
+   $when = Carbon::now()->addSeconds(10);
    $user->notify(new ReportUpdate($data));
 }
 

@@ -2,17 +2,20 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 //no auth required
 Route::get('/status/{ref}','ReportController@ReportStatus');
 Route::get('/missing/all','MissingPersonController@allMissing');
 Route::get('/parish_statistic/{parish}','ReportController@parishStatistic');
-Route::get('/test',function(){
-    return "hello from api";
+
+Route::get('/role',function(){
+$user = User::where('is_admin',1)->first();
+$user->assignRole('administrator');
 });
-
-
 
 Route::group(['middleware' => ['auth:api']], function () {
 

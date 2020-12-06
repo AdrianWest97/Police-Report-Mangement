@@ -14,42 +14,44 @@
     <v-navigation-drawer
      v-model="drawer"
       app
-      class=""
-    >
-            <v-list>
+      class="">
+
+        <v-list>
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          link
+          :to="item.route"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
-
           <v-list-item-content>
-            <router-link  class="grey--text" :to="item.route">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </router-link>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+
+
     </v-navigation-drawer>
      <div class="container-fluid grey lighten-4 h-screen">
      <v-row  v-if="$route.path === '/dashboard'">
      <card v-for="card in cards" :key="card.text" :text="card.text" :icon="card.icon" :value="card.value">
      </card>
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="4">
               <v-sheet
               rounded="lg"
               min-height="50"
+              class="p-5"
             >
            <chart-by-type></chart-by-type>
             </v-sheet>
           </v-col>
-                <v-col cols="12" sm="9">
+                <v-col cols="12" sm="8">
               <v-sheet
               rounded="lg"
               min-height="50"
+               class="p-5"
             >
                <chart-by-parish></chart-by-parish>
             </v-sheet>
@@ -81,7 +83,7 @@ export default {
           { title: 'Pending Reports', icon: 'mdi-clock-time-eight-outline ',route:'/dashboard/pending-reports' },
           { title: 'Missing persons', icon: 'mdi-account-box',route:'/dashboard/missing-person' },
           { title: 'Active Users', icon: 'mdi-account-group', route:'/dashboard/active-users' },
-          { title: 'Logout', icon: 'mdi-logout', route:'/dashboard' },
+          { title: 'Logout', icon: 'mdi-logout', route:'/' },
         ],
         cardData:null,
         cards:[]

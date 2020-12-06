@@ -7,7 +7,7 @@
               rounded="lg"
               min-height="50"
             >
-             <div class="d-flex flex-column  flex-lg-row justify-content-between p-5">
+             <div class="d-flex flex-column  flex-lg-row justify-content-between p-3">
                <div>
                  <img :src="icon"  width="50px" alt="active users"/>
                </div>

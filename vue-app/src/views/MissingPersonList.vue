@@ -27,7 +27,7 @@
   >
        <template v-slot:item.image="{ item }">
                <v-img
-               :src="'http://localhost:8000/storage/'+item.image.path"
+               :src="loadPath(item.image.path)"
                contain
                 :aspect-ratio=".5"
                 width="200"
@@ -70,14 +70,8 @@
                   <v-list-item-subtitle  style="white-space:normal;">{{item.last_seen_details}}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-  <!-- <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title>Location</v-list-item-title>
-        <v-list-item-subtitle>{{item.address.parish}}</v-list-item-subtitle>
-        <v-list-item-subtitle>{{item.address.city}}</v-list-item-subtitle>
-        <v-list-item-subtitle>{{item.address.street}}</v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item> -->
+
+      <v-list three-line>
       <v-list-item>
       <v-list-item-content>
         <v-list-item-title>Attributes</v-list-item-title>
@@ -86,6 +80,7 @@
         <v-list-item-subtitle>Eye color: {{JSON.parse(item.attributes).hair_color}}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
+      </v-list>
             </template>
   </v-data-table>
       </v-card>
@@ -137,6 +132,9 @@ methods:{
           this.loading = false;
         });
   },
+  loadPath(image){
+    return `${process.env.APP_URL}/storage/${image}`
+  }
 },
 created(){
   this.loadTable();

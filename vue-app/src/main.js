@@ -8,7 +8,10 @@ Vue.use(Vuetify)
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import '../src/assets/css/main.scss'
+import './broadcaster.js';
 Vue.use(require('vue-moment'));
+
+
 
 
 
@@ -30,3 +33,4 @@ new Vue({
   }),
   render: (h) => h(App),
 }).$mount("#app");
+

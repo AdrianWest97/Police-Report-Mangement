@@ -3,7 +3,7 @@ import store from '../store'
 import router from "../router";
 
 let BaseApi = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: process.env.BASE_API
 })
 
 BaseApi.interceptors.response.use(
