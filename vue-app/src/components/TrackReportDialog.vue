@@ -29,15 +29,15 @@
       <v-timeline-item
         v-for="result in results"
         :key="result.id"
-        large
+        small
         fill-dot
        class="white--text mb-12"
        :color="checkStatus(JSON.parse(result.data).status).color"
 
       >
-         <template v-slot:icon>
+         <!-- <template v-slot:icon>
           <small class="text-small">{{result.created_at | moment("MMM DD")}}</small><br>
-        </template>
+        </template> -->
        <v-card  flat>
         <v-card-title>{{result.created_at | moment("ddd, MMM D YYYY")}}</v-card-title>
         <v-card-subtitle>

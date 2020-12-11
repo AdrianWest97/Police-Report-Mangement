@@ -15,7 +15,7 @@
          </v-sheet>
 
       <v-col cols="12">
-      <v-card elevation="1">
+      <v-card elevation="0" outlined>
   <v-data-table
     :headers="computedHeaders"
     :items="getAllMissing"
@@ -81,7 +81,23 @@
       </v-list-item-content>
     </v-list-item>
       </v-list>
-            </template>
+      <v-container class="border" dense>
+        <v-row dense>
+          <v-col cols="10">
+                <v-text-field
+      filled
+      placeholder="Know anthing?"
+      v-model="reply"
+      >
+      </v-text-field>
+          </v-col>
+          <v-col>
+                  <v-btn text>Submit</v-btn>
+
+          </v-col>
+        </v-row>
+      </v-container>
+     </template>
   </v-data-table>
       </v-card>
 
@@ -102,6 +118,7 @@ import Navigation from '../components/Navigation.vue'
 export default {
   data:()=>({
      search: '',
+     reply:'',
      firstLoad:true,
      loading:false,
     headers:[

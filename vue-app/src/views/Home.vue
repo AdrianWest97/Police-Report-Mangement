@@ -80,23 +80,24 @@
       </div>
     </router-link>
 </v-col>
-
-      </v-row>
+   </v-row>
   </v-container>
 </section>
-
+<page-footer></page-footer>
 </div>
 </template>
 
 <script>
 import Navigation from '../components/Navigation'
+import PageFooter from '../components/PageFooter.vue'
 import ParishStatistics from '../components/ParishStatistics.vue'
 
 export default {
   name: 'Home',
   components: {
     Navigation,
-    ParishStatistics
+    ParishStatistics,
+    PageFooter
   }
 }
 </script>

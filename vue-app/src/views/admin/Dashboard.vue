@@ -35,6 +35,7 @@
 
     </v-navigation-drawer>
      <div class="container-fluid grey lighten-4 h-screen">
+
      <v-row  v-if="$route.path === '/dashboard'">
      <card v-for="card in cards" :key="card.text" :text="card.text" :icon="card.icon" :value="card.value">
      </card>
@@ -56,6 +57,20 @@
                <chart-by-parish></chart-by-parish>
             </v-sheet>
           </v-col>
+
+          <v-col cols="12">
+              <v-sheet
+              rounded="lg"
+              min-height="50"
+               class="p-5"
+            >
+               <country-map></country-map>
+            </v-sheet>
+          </v-col>
+
+
+
+
         </v-row>
              <router-view>
      </router-view>
@@ -69,11 +84,13 @@ import ChartByType from '../../components/charts/ChartByType.vue';
 import ChartByParish from '../../components/charts/ChartByParish.vue';
 import Report from '../../apis/Report';
 import User from '../../apis/User.js';
+import CountryMap from '../../components/CountryMap.vue';
 export default {
   components:{
     Card,
     ChartByType,
-    ChartByParish
+    ChartByParish,
+    CountryMap,
   },
   data() {
     return {
@@ -86,11 +103,25 @@ export default {
           { title: 'Logout', icon: 'mdi-logout', route:'/' },
         ],
         cardData:null,
-        cards:[]
+        cards:[],
+         showInfo: false,
+      infoWIndowContext: {
+        position: {
+          lat: 44.2899,
+          lng: 11.8774
+        }
+      },
     }
   },
 
   methods:{
+      toggleInfoWindow (context) {
+      this.infoWIndowContext = context
+      this.showInfo = true
+    },
+    infoClicked(context) {
+      console.log(context)
+    },
     getCardData(){
       Report.getCardData()
       .then((res) => {

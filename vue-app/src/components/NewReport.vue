@@ -9,7 +9,7 @@
        >
       <v-card :loading="loading">
         <v-card-title>
-          <span class="text-small text-bolder">New Police Report</span>
+          <span class="text-small text-bolder">Quick Report</span>
           <v-spacer></v-spacer>
   <v-switch v-model="form.anonymous">
       <template v-slot:label>

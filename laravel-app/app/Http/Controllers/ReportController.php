@@ -147,7 +147,7 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function all(){
-        return response(['reports'=>auth()->user()->reports]);
+        return response(['reports'=>auth()->user()->reports->loadMissing('address','witnesses')]);
     }
 
     public function report($id){
@@ -211,11 +211,10 @@ public function emailReferenceNumber($ref,$message,$status){
 
 
     public function parishStatistic($parish){
-        $report = ReportType::with('reports',function($q){
-            $q->whereHas('address',function($q){
-                $q->where('parish','Hanover');
-            });
-        })->get();
+               $report = ReportType::with(['reports',function($q){
+                $q->orderBy('created_at', 'asc');
+               }])->get();
+
         return response($report);
     }
 }

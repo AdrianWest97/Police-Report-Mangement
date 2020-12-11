@@ -13,9 +13,10 @@ import TrackReportDialog from "./components/TrackReportDialog.vue"
 
 export default {
   components: {
-    TrackReportDialog
+    TrackReportDialog,
   },
-  mounted() {
+  mounted()
+    {
     this.$store.commit("LOGIN", !!localStorage.getItem("token"));
     window.Echo.channel('channel')
     .listen('Hello',(e)=>{

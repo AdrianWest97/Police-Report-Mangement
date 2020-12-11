@@ -49,6 +49,7 @@
          <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
         </div>
 
+
     <div class="d-flex justify-content-between">
              <v-btn
         class="mr-4"

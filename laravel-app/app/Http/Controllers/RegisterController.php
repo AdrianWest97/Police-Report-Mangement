@@ -13,7 +13,7 @@ class RegisterController extends Controller
         $request->validate([
             'name' => ['required','string'],
             'phone' => ['required','string'],
-            'street' => ['required','string'],
+            'street' => ['required','string',],
             'city' => ['required','string'],
             'parish' => ['required','string'],
             'trn' => ['required','numeric'],
@@ -26,6 +26,7 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+
 
         $user->address()->create([
             'parish' => $request->parish,
