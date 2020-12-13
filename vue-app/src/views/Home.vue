@@ -64,7 +64,7 @@
          <div class="card-icon p-3">
                       <img src="../assets/svg/search.svg" alt="track"/>
          </div>
-      <h3>Find missing people</h3>
+      <h3>Find missing persons</h3>
        <p class="small">See a list of missing people or report someone missing.</p>
       </div>
     </router-link>
