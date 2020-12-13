@@ -26,12 +26,7 @@
 
 
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="getUsers()"
-      >
-        Refresh
-      </v-btn>
+     <no-data :btnClickHandler="getActiveUsers"></no-data>
     </template>
       </v-data-table>
     </v-card-text>
@@ -42,9 +37,11 @@
 
 <script>
 import Report from '../../apis/Report'
+import NoData from '../../components/NoData.vue'
 export default {
 data:()=>({
   loading:true,
+
   firstLoad:true,
   users:[],
       headers: [
@@ -79,6 +76,10 @@ computed:{
 created(){
 this.getUsers();
 },
+
+components:{
+  NoData
+}
 }
 </script>
 

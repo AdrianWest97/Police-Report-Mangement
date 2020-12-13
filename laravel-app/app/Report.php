@@ -11,6 +11,7 @@ class Report extends Model
 {
 
     use Notifiable;
+    use CascadesDeletes;
 
     protected $cascadeDeletes = ['address','witnesses'];
 
@@ -19,7 +20,6 @@ class Report extends Model
         'date',
         'reference_number',
         'additional',
-        'anonymous'
     ];
 
 //location of crime

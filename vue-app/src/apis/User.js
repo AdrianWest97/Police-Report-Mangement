@@ -1,21 +1,22 @@
 import Api from './Api'
 
 export default {
-  register (form) {
+  register(form) {
     return Api().post('/register', form)
   },
 
-  login (form) {
+  login(form) {
     return Api().post('/login', form)
   },
 
-  logout () {
+  logout() {
     return Api().post('/logout')
   },
 
-  auth () {
+  auth() {
     return Api().get('/user')
   },
+
 
 
 }

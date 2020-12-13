@@ -18,10 +18,10 @@ export default {
   mounted()
     {
     this.$store.commit("LOGIN", !!localStorage.getItem("token"));
-    window.Echo.channel('channel')
-    .listen('Hello',(e)=>{
-      console.log(e);
-    })
+    // window.Echo.channel('channel')
+    // .listen('Hello',(e)=>{
+    //   console.log(e);
+    // })
   }
 };
 </script>

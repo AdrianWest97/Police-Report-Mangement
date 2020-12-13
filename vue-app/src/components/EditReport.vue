@@ -8,6 +8,8 @@
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
+      transition="slide-y-transition"
+
        >
        <v-card  class="text-center p-5" v-if="getEditReport.report == null">
            <v-card-text>

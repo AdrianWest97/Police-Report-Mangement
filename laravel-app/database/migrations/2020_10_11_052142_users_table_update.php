@@ -19,6 +19,7 @@ class UsersTableUpdate extends Migration
             $table->string("phoneno",11)->nullable()->unique();
             $table->string("gender")->nullable();
             $table->boolean("is_admin")->default(false);
+            $table->boolean("is_active")->default(true);
         });
     }
 

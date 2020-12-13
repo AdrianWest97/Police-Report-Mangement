@@ -6,17 +6,13 @@
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
+       transition="slide-y-transition"
        >
       <v-card :loading="loading">
         <v-card-title>
           <span class="text-small text-bolder">Quick Report</span>
           <v-spacer></v-spacer>
-  <v-switch v-model="form.anonymous">
-      <template v-slot:label>
-        Anonymous report?
-         <v-icon small>mdi-help-circle</v-icon>
-      </template>
-    </v-switch>
+
         </v-card-title>
         <v-divider></v-divider>
                 <v-card-text>
@@ -40,9 +36,9 @@
 											<v-select
 												:items="reportTypes.map(type => type.type)"
 												v-model="form.type"
+                         slot-scope="{ errors }"
+                        :error-messages="errors"
 												label="Select Report Type"
-												slot-scope="{ errors }"
-												:error-messages="errors"
 												required
 											></v-select>
 										</validation-provider>
@@ -52,7 +48,6 @@
                 sm="6"
                 md="6"
               >
-      <validation-provider name="date" rules="required">
       <v-menu
         v-model="menu2"
         :close-on-content-click="false"
@@ -62,21 +57,25 @@
         min-width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
+        <validation-provider  name="date" rules="required">
           <v-text-field
             v-model="form.date"
             label="Date of inccident"
             prepend-icon="mdi-calendar"
             readonly
+						required
+            slot-scope="{ errors }"
+            :error-messages="errors"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
+                </validation-provider>
         </template>
         <v-date-picker
           v-model="form.date"
           @input="menu2 = false"
         ></v-date-picker>
       </v-menu>
-    </validation-provider>
               </v-col>
 
                   </v-row>
@@ -99,8 +98,8 @@
 												:items="parishes"
 												v-model="form.parish"
 												label="Select Parish"
-												slot-scope="{ errors }"
-												:error-messages="errors"
+                        slot-scope="{ errors }"
+                        :error-messages="errors"
 												required
 											></v-select>
 										</validation-provider>
@@ -114,7 +113,6 @@
 											<v-text-field
 												label="City"
 												v-model="form.city"
-
 												hide-details="auto"
 												slot-scope="{ errors }"
 												:error-messages="errors"
@@ -133,7 +131,7 @@
 												v-model="form.street"
 												hide-details="auto"
 												slot-scope="{ errors }"
-												:error-messages="errors"
+                        :error-messages="errors"
 												required
 											></v-text-field>
 										</validation-provider>
@@ -156,12 +154,12 @@
                     rows="2"
                      row-height="50"
                     auto-grow
+                    slot-scope="{ errors }"
+                    :error-messages="errors"
                     label="Details"
                    filled
                     class="mt-1"
                     v-model="form.details"
-                    slot-scope="{ errors }"
-										:error-messages="errors"
 										required
                   ></v-textarea>
               	</validation-provider>
@@ -228,7 +226,10 @@
                   ></v-textarea>
                       </v-col>
                   	<validation-provider class="mx-4" name="Accepted terms" rules="required">
-                    <v-checkbox required v-model="form.accepted_terms">
+                    <v-checkbox required
+                    	slot-scope="{ errors }"
+                        :error-messages="errors"
+                        v-model="form.accepted_terms">
                     <template v-slot:label>
                          By clicking submit, you certify that all the given information is true and correct.
                         </template>
@@ -303,11 +304,10 @@ extend('required', {
         street:'',
         type:'',
         details:'',
-        accepted_terms:null,
+        accepted_terms:false,
         hasWitness:false,
         witnesses:[],
         additional:'',
-        anonymous:false
        },
       temp_witnesses:[],
        temp_name:'',
@@ -335,7 +335,6 @@ extend('required', {
      },
      closeDialog(){
       this.loading = false;
-      this.form.anonymous = false;
       this.$refs.form.reset()
        this.temp_witnesses = [];
        this.$store.commit('SET_REPORT_DIALOG',false)
@@ -346,7 +345,7 @@ extend('required', {
        if(this.temp_witnesses.length > 0){
          this.form.witnesses = JSON.stringify(this.temp_witnesses)
        }
-        Api().post("/create",this.form)
+        Api().post("/report/create",this.form)
         .then((response) => {
           this.loading = false;
           //close form

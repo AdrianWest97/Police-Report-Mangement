@@ -2,10 +2,12 @@
 
 namespace App\Notifications;
 
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class ReportUpdate extends Notification implements ShouldQueue
 {
@@ -25,7 +27,18 @@ class ReportUpdate extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database','mail'];
+        $via = [];
+        //check if user is active
+        //do not send report update to in active user account
+        $user = User::where('email',$this->data['to'])->first();
+        if($user->is_active){
+        $via = ['database','mail'];
+        }else{
+        $via = ['database'];
+        }
+
+
+        return $via;
     }
 
     /**

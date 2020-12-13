@@ -28,10 +28,10 @@
               <v-col cols="12"
                sm="6"
                 md="6">
-                      <validation-provider name="fname" rules="required">
+                      <validation-provider name="name" rules="required">
 											<v-text-field
-												label="First name"
-												v-model="form.fname"
+												label="Full name"
+												v-model="form.name"
 												hide-details="auto"
 												slot-scope="{ errors }"
 												:error-messages="errors"
@@ -43,16 +43,31 @@
                            sm="6"
                             md="6"
                             >
-                      <validation-provider name="lname" rules="required">
-											<v-text-field
-												label="Last name"
-												v-model="form.lname"
-												hide-details="auto"
-												slot-scope="{ errors }"
-												:error-messages="errors"
-												required
-											></v-text-field>
-										</validation-provider>
+             <validation-provider name="date" rules="required">
+      <v-menu
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="form.last_seen"
+            label="Last seen date"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="form.last_seen"
+          @input="menu2 = false"
+        ></v-date-picker>
+      </v-menu>
+    </validation-provider>
               </v-col>
 
                          <v-col
@@ -141,55 +156,6 @@
                   </v-card-title>
                 </v-card>
                     </v-col>
-
-               <v-col cols="12">
-                <v-card flat style="margin:0 !important">
-                  <v-card-subtitle>Detail information</v-card-subtitle>
-                  <v-card-title>
-                    <v-row>
-                      <v-col
-                       cols="12"
-                       sm="6"
-                       md="4"
-                        >
-                      <validation-provider name="height">
-											<v-text-field
-												label="Height"
-												v-model="form.attributes.height"
-												hide-details="auto"
-											></v-text-field>
-										</validation-provider>
-                      </v-col>
-
-                       <v-col
-                       cols="12"
-                       sm="6"
-                       md="4"
-                        >
-                      <validation-provider name="eye_color">
-											<v-text-field
-												label="Eye color"
-												v-model="form.attributes.eye_color"
-												hide-details="auto"
-											></v-text-field>
-										</validation-provider>
-                      </v-col>
-
-                           <v-col
-                       cols="12"
-                       sm="6"
-                       md="4"
-                        >
-                      <validation-provider name="hair_color">
-											<v-text-field
-												label="Hair color"
-												v-model="form.attributes.hair_color"
-												hide-details="auto"
-											></v-text-field>
-										</validation-provider>
-                     </v-col>
-
-
                            <v-col
                             cols="12"
                             sm="6"
@@ -278,10 +244,6 @@
               	</validation-provider>
                       </v-col>
 
-                    </v-row>
-                  </v-card-title>
-                </v-card>
-                 </v-col>
 
             </v-row>
           </v-container>
@@ -295,13 +257,12 @@
             Cancel
           </v-btn>
           <v-btn
-            color="success"
-           :loading="loading"
+            color="primary"
             type="submit"
             :disabled="invalid"
             @click.prevent="submit()"
           >
-          Save
+          Submit
           </v-btn>
         </v-card-actions>
             </v-form>
@@ -309,6 +270,7 @@
                 </v-card-text>
       </v-card>
     </v-dialog>
+    <success-modal></success-modal>
   </v-row>
   </div>
 </template>
@@ -318,6 +280,7 @@ import { mapGetters, mapState } from 'vuex';
 import { required, max, image } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 import MissingPerson from '../apis/MissingPerson';
+import SuccessModal from './successModal.vue';
 
 setInteractionMode('eager')
 extend('required', {
@@ -333,22 +296,20 @@ extend('required', {
 export default {
   data:() => ({
     loading:false,
+          menu2:false,
+
     mode:'add',
     id:null,
     form:{
-      fname:'',
-      lname:'',
+      name:'',
       gender:'',
       age:null,
-      attributes:{
-       height:null,
-       hair_color:null,
-       eye_color:null
-      },
       parish:'',
       city:'',
       street:'',
+      last_seen:new Date().toISOString().substr(0, 10),
       last_seen_details:'',
+      status:0
     },
     image:null,
     temp_img:''
@@ -366,29 +327,30 @@ export default {
       this.mode = this.missingReportDialog.mode
       this.id =this.missingReportDialog.report.id
       this.form = {
-      fname:this.missingReportDialog.report.fname,
-      lname:this.missingReportDialog.report.lname,
+      name:this.missingReportDialog.report.name,
       id:this.missingReportDialog.report.id,
       gender:this.missingReportDialog.report.gender,
+      last_seen:this.missingReportDialog.report.last_seen_date,
       age:this.missingReportDialog.report.age,
-      attributes:{
-       height:JSON.parse(this.missingReportDialog.report.attributes).height,
-       hair_color:JSON.parse(this.missingReportDialog.report.attributes).hair_color,
-       eye_color:JSON.parse(this.missingReportDialog.report.attributes).eye_color
-      },
       parish:this.missingReportDialog.report.address.parish,
       city:this.missingReportDialog.report.address.city,
       street:this.missingReportDialog.report.address.street,
       last_seen_details:this.missingReportDialog.report.last_seen_details,
+      status:this.missingReportDialog.report.status
     }
     this.temp_img = `${process.env.APP_URL}/storage/${this.missingReportDialog.report.image.path}`
      },
+
+
+
      closeDialog(){
        this.loading = false;
       this.$refs.form.reset()
        this.$refs.observer.reset()
        this.$store.commit('SET_MISSING_REPORT_DIALOG',false)
      },
+
+
      submit(){
         this.loading = true;
        this.$refs.observer.validate();
@@ -409,7 +371,15 @@ export default {
                   report:res.data,
                   mode:this.mode
                 });
-                this.closeDialog();
+         this.closeDialog();
+         if(this.mode == 'add'){
+          this.$store.commit('SET_SUCCESS_DIALOG',{
+          content:res.data.reference_number,
+          message:'Your report has been submmited for review and approval',
+          visible:true,
+          title:'Success'
+        });
+         }
 
              }).catch((err) =>{
                alert(err);
@@ -434,7 +404,8 @@ missingDialog(newValue, oldValue){
 
    components:{
      ValidationObserver,
-     ValidationProvider
+     ValidationProvider,
+      SuccessModal
    }
 }
 </script>

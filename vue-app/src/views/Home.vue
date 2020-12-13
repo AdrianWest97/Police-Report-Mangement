@@ -36,15 +36,15 @@
     <h4 class="font-weight-bolder">What else we can help with?</h4>
     <v-row dense>
     <v-col  cols="12" md="6" lg="4" sm="12" >
-		<router-link to="/report" class="card2">
+	<a href="#" @click.prevent="$store.commit('SET_REPORT_DIALOG',true)" class="card2">
        <div class="d-flex flex-column justify-content-center">
          <div class="card-icon p-3">
-           <img src="../assets/svg/report.svg" alt="track"/>
+           <img src="../assets/svg/clock.svg" alt="track"/>
          </div>
-      <h3>Make a Report</h3>
-       <p class="small">Make a report of a crime or suspicious activities</p>
+      <h3>Quick Report</h3>
+       <p class="small">Make a report anonymously or create an account.</p>
       </div>
-    </router-link>
+	</a>
 </v-col>
     <v-col  cols="12" md="6" lg="4" sm="12">
 		<a href="#" @click="$store.dispatch('showTrackReportDialog')" class="card2">
@@ -52,8 +52,8 @@
          <div class="card-icon p-3">
            <img src="../assets/svg/delivery.svg" alt="track"/>
          </div>
-      <h3>Track your Reports</h3>
-       <p class="small">Track your report progress to see when it has been approved.</p>
+      <h3>Track your Report</h3>
+       <p class="small">Track your report to see when it has been approved.</p>
       </div>
 		</a>
 </v-col>
@@ -65,7 +65,7 @@
                       <img src="../assets/svg/search.svg" alt="track"/>
          </div>
       <h3>Find missing people</h3>
-       <p class="small">See a list of missing person.</p>
+       <p class="small">See a list of missing people or report someone missing.</p>
       </div>
     </router-link>
 </v-col>
@@ -83,6 +83,7 @@
    </v-row>
   </v-container>
 </section>
+  <new-report></new-report>
 <page-footer></page-footer>
 </div>
 </template>
@@ -91,14 +92,20 @@
 import Navigation from '../components/Navigation'
 import PageFooter from '../components/PageFooter.vue'
 import ParishStatistics from '../components/ParishStatistics.vue'
+import NewReport from "../components/NewReport.vue"
+import User from '../apis/User'
+import Api from '../apis/Api'
+
 
 export default {
   name: 'Home',
   components: {
     Navigation,
     ParishStatistics,
-    PageFooter
-  }
+    PageFooter,
+    NewReport
+  },
+
 }
 </script>
 

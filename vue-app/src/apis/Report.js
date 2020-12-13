@@ -1,33 +1,40 @@
 import Api from './Api'
 
+
+//guest
 export default {
   reportTypes (form) {
     return Api().get('/reportTypes')
   },
 
   reportById (id) {
-    return Api().get('/report/'+id)
+    return Api().get('/report/report/'+id)
   },
 
   reports () {
-    return Api().get('/all')
+    return Api().get('/report/all')
   },
 
   getEdit(id) {
-    return Api().get('/edit/'+id)
+    return Api().get('/report/edit/'+id)
   },
 
     update(form,id) {
-    return Api().put('/update/'+id,form)
+    return Api().put('/report/update/'+id,form)
   },
 
    delete (id) {
-    return Api().delete('/delete/'+id)
+    return Api().delete('/report/delete/'+id)
   },
 
   deleteWitness(id) {
-    return Api().delete('/delete-witness/'+id)
+    return Api().delete('/report/delete-witness/'+id)
   },
+  getParishStatistic(parish) {
+    return Api().get('/parish_statistic/'+parish)
+  },
+
+
   //admin
   getAll() {
      return Api().get('/admin/all-reports')
@@ -36,6 +43,12 @@ export default {
   updateStatus(form) {
     return Api().put('/admin/update-status', form);
   },
+
+    //update report status
+  updateMissingStatus(form) {
+    return Api().put('/admin/update-missing-status', form);
+  },
+
   reportByTypeChart() {
     return Api().get('/report-by-type');
   },
@@ -51,7 +64,7 @@ getActiveUsers() {
     return Api().get('/status/'+$ref)
   },
 
-  getParishStatistic(parish) {
-    return Api().get('/parish_statistic/'+parish)
-  }
+
+
+
 }

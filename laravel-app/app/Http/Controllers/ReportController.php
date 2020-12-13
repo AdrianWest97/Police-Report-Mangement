@@ -10,6 +10,7 @@ use App\Witness;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
@@ -28,7 +29,6 @@ class ReportController extends Controller
             "hasWitness"=>['nullable','boolean'],
             "date"=>['required','date'],
             "witnesses"=>['nullable'],
-            "anonymous"=>['nullable']
           ]);
 
          $witnesses = null;
@@ -36,6 +36,15 @@ class ReportController extends Controller
               $witnesses = $this->toArray($data['witnesses']);
          }
 
+         //check auth
+         $user = null;
+         if(!auth('api')->check()){
+            //assign guest user
+          $user = User::where('email','guest@prms.com')->first();
+         }else{
+             //user is authenticated
+             $user = auth('api')->user();
+         }
 
 
           $report = new Report;
@@ -44,8 +53,9 @@ class ReportController extends Controller
           $report->additional = $data['additional'] ;
           $report->hasWitness = !empty($witnesses);
           $report->date = $data['date'];
-          $report->anonymous = $data['anonymous'];
-          $report->user_id = auth()->user()->id;
+
+
+          $report->user_id = $user->id;
           //add reference number
              $ref_num = $this->unique_id(6);
              while(Report::where('reference_number',$ref_num)->count() > 0){
@@ -67,15 +77,11 @@ class ReportController extends Controller
                 ]);
               }
             }
-              //email reference number
+              //email reference number if user is authenticated
               $msg = "Your report has been submitted for review";
-              try{
-              $this->emailReferenceNumber($ref_num,$msg,"pending");
+              $this->emailReferenceNumber($ref_num,$msg,"pending",$user);
              return response(['reference_number'=>$ref_num]);
-              }catch(Exception $err){
-              return response(['reference_number'=>$ref_num]);
-              }
-          }
+            }
     }
 
     //generate unique reference number
@@ -83,15 +89,13 @@ class ReportController extends Controller
     return substr(md5(uniqid(mt_rand(), true)), 0, $l);
 }
 
-public function emailReferenceNumber($ref,$message,$status){
+public function emailReferenceNumber($ref,$message,$status,$user){
     $data = [
-     "to" =>auth()->user()->email,
+     "to" =>$user->email,
      "reference_number"=>strtoupper($ref),
      "message"=>$message,
      "status" => $status
     ];
-   $user = User::find(auth()->id());
-   $when = Carbon::now()->addSeconds(10);
    $user->notify(new ReportUpdate($data));
 }
 
@@ -147,7 +151,7 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function all(){
-        return response(['reports'=>auth()->user()->reports->loadMissing('address','witnesses')]);
+        return response(['reports'=>auth('api')->user()->reports->loadMissing('address','witnesses')]);
     }
 
     public function report($id){
@@ -204,9 +208,14 @@ public function emailReferenceNumber($ref,$message,$status){
     }
 
     public function ReportStatus($ref){
-        return response(['reports' => DB::table('notifications')->get()->filter(function($data) use ($ref){
-           return json_decode($data->data)->reference_number == strtolower($ref);
-        })]);
+        $details = DB::table('notifications')
+        ->orderBy('created_at','asc')
+        ->get()
+        ->filter(function($data) use ($ref){
+           return strcasecmp(json_decode($data->data)->reference_number,$ref) == 0;
+        });
+
+        return response(['reports' => $details]);
     }
 
 

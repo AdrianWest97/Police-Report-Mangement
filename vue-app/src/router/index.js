@@ -82,7 +82,7 @@ const routes = [
     path: '/report',
     name: 'report',
     component: userDashboard,
-    meta:{authOnly:true, breadCrumb:'Report'},
+    meta:{breadCrumb:'Report', authOnly: true},
     children: [
       {
         path: 'my-reports',

@@ -50,12 +50,12 @@
                  medium
                 @click="editItem(item)"
                 >
-            mdi-pencil-outline
+                 mdi-comment-eye-outline
+
                </v-icon>
 
        <v-icon
         medium
-       :disabled="item.status == 2"
       @click="deleteItem(item)"
       >
         mdi-delete-outline
@@ -77,7 +77,7 @@
                 class="m-2"
 
                 >
-              <img class="rounded"  :src="loadImage(item.image.path)" :alt="item.fname"/>
+              <img class="rounded"  :src="loadImage(item.image.path)" :alt="item.name"/>
               </v-avatar>
 
          </template>
@@ -92,14 +92,28 @@
              {{ item.created_at| moment("ddd, MMM D YYYY") }}
          </template>
 
+            <template v-slot:item.created_at="{ item }">
+             {{ item.created_at| moment("ddd, MMM D YYYY") }}
+         </template>
+
+                   <template v-slot:item.reference_number="{ item }">
+             {{ item.reference_number.toUpperCase()}}
+         </template>
+
+    <template v-slot:item.status="{ item }">
+      <v-chip
+        :color="checkStatus(item.status).color"
+        class="text-white"
+        small
+      >
+       {{checkStatus(item.status).value}}
+      </v-chip>
+    </template>
+
 
 
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-      >
-        Reset
-      </v-btn>
+      <no-data :btnClickHandler="loadTable"></no-data>
     </template>
   </v-data-table>
     </v-card-text>
@@ -107,15 +121,21 @@
        </v-col>
        <report-missing/>
        <snack-bar/>
+       <approve-missing></approve-missing>
    </v-row>
 </template>
 
 <script>
 import MissingPerson from '../../apis/MissingPerson';
+import ApproveMissing from '../../components/ApproveMissing.vue';
+import NoData from '../../components/NoData.vue';
 import ReportMissing from '../../components/ReportMissing.vue';
 import SnackBar from '../../components/SnackBar.vue';
 export default {
-  components: { ReportMissing, SnackBar },
+  components: { ReportMissing, SnackBar,
+    NoData,
+    ApproveMissing
+    },
 data:()=>({
   loading:false,
   reload:false,
@@ -124,18 +144,37 @@ data:()=>({
       dialogDelete: false,
       headers: [
         {text: 'Date Created',align: 'start',value: 'created_at'},
+        { text: 'Reference #', value: 'reference_number' },
         { text: 'id', value: 'id', align:'d-none' },
         { text: 'Photo', value: 'photo' },
-        { text: 'First Name', value: 'fname' },
-        { text: 'Last Name', value: 'lname' },
+        { text: 'Name', value: 'name' },
         { text: 'Age', value: 'age' },
         { text: 'Gender', value: 'gender' },
         { text: 'Parish', value: 'parish' },
+        { text: 'Status', value: 'status' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
 }),
 
 methods:{
+   checkStatus(status){
+if(status == 2){
+  return {
+    color:'success',
+    value:'Approved',
+  }
+  }else if(status == 1){
+ return {
+    color:'warning',
+    value:'Reviewing',
+  }
+  }else{
+     return {
+    color:'info',
+    value:'Pending',
+  }
+  }
+},
  //loadTable
       loadTable(){
           this.$store.dispatch('fetchAllMissing');
@@ -158,11 +197,10 @@ return `${process.env.APP_URL}/storage/${image}`
 },
 
  editItem (item) {
-      this.$store.commit('SET_MISSING_REPORT_DIALOG',{
-     dialog:true,
-     mode:'edit',
-     report:item
-   })
+        this.$store.commit("SET_MISSING_APPROVE_DIALOG",{
+          visible:true,
+          report:item
+        })
       },
 
      deleteItem (item) {

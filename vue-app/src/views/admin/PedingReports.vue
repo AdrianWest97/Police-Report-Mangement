@@ -24,7 +24,7 @@
     </template>
 
     <template v-slot:item.email="{ item }">
-       {{item.anonymous ? "Anonymous" : item.user.email}}
+       {{item.user.email == "guest@prms.com" ? "Anonymous" : item.user.email}}
     </template>
 
         <template v-slot:item.type="{ item }">
@@ -32,7 +32,7 @@
     </template>
 
        <template v-slot:item.name="{ item }">
-             {{item.anonymous ? "Anonymous" : item.user.name}}
+             {{item.user.email == "guest@prms.com" ? "Anonymous" : item.user.name}}
 
     </template>
 
@@ -76,14 +76,8 @@
                </v-icon>
     </template>
 
-
     <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="fetchReports()"
-      >
-        Reset
-      </v-btn>
+<no-data :btnClickHandler="$store.dispatch('fetchAllReports')"></no-data>
     </template>
   </v-data-table>
     </v-card-text>
@@ -95,8 +89,8 @@
 
 <script>
 import RespondModal from '../../components/admin/RespondModal';
-import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import NoData from '../../components/NoData.vue';
 export default {
   data:()=> ({
         loading:true,
@@ -127,22 +121,21 @@ export default {
         }, 1000);
 
       }
-
     },
- checkStatus(status){
+   checkStatus(status){
 if(status == 2){
   return {
-    color:'#56a95b',
+    color:'success',
     value:'Approved',
   }
   }else if(status == 1){
  return {
-    color:'#fe9600',
+    color:'warning',
     value:'Reviewing',
   }
   }else{
      return {
-    color:'#f44236',
+    color:'info',
     value:'Pending',
   }
   }
@@ -174,7 +167,8 @@ created(){
 
 
 components:{
-RespondModal
+RespondModal,
+NoData
 },
 }
 </script>

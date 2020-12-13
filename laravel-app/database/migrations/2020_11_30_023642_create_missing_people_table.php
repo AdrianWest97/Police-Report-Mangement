@@ -16,12 +16,15 @@ class CreateMissingPeopleTable extends Migration
         Schema::create('missing_people', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("fname");
-            $table->string("lname");
+            $table->string("name");
             $table->string("age")->nullable();
+            $table->string("last_seen_date");
             $table->string("gender");
-            $table->string("attributes")->nullable(); //Age, weight, height, hair color, eye color
+            $table->string("reference_number");
+            $table->integer("status")->default(1);
             $table->longText("last_seen_details");
+            $table->integer("user_id");
+            $table->string("headline")->nullable();
         });
     }
 

@@ -6,35 +6,51 @@ use App\Address;
 use Illuminate\Http\Request;
 use App\MissingPerson;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\ReportUpdate;
 use Image;
-
+use App\User;
+use Illuminate\Support\Facades\Auth;
 class MissingPersonController extends Controller
 {
 
     public function store(Request $request, $mode, $id=null){
+
         $data = $this->validate($request,[
-            'fname' => ['required','string'],
-            'lname' => ['required','string'],
+            'name' => ['required','string'],
             'gender' => ['required','string'],
             'age' => ['nullable','string'],
             'parish' => ['required','string'],
             'city' => ['required','string'],
             'street' => ['required','string'],
-            'attributes' => ['nullable','string'], //key value
-            'last_seen_details' =>['required','string']
+            'last_seen_details' =>['required','string'],
+            'last_seen' =>['required','string'],
+            'status' =>['nullable','integer'],
         ]);
 
-        //create report
+       // create report
+          $user = null;
+         if(!auth('api')->check()){
+            //assign guest user
+          $user = User::where('email','guest@prms.com')->first();
+         }else{
+            //user is authenticated
+             $user = auth('api')->user();
 
+         }
+
+        $ref_num = $this->unique_id(6);
         $report = $mode == 'add' ?  new MissingPerson : MissingPerson::find($id);
-        $report->fname = $data['fname'];
-        $report->lname = $data['lname'];
+        $report->name = $data['name'];
         $report->gender = $data['gender'];
         $report->age = $data['age'] ?  $data['age'] : null;
-        $report->attributes = $data['attributes'] ?  $data['attributes'] : null;
+        $report->last_seen_date = $data['last_seen'];
         $report->last_seen_details = $data['last_seen_details'];
+        $report->reference_number = $mode == 'add' ? $ref_num : $report->reference_number;
+        $report->status = $data['status'];
+        $report->user_id = $user->id;
+
         $report->save();
-        //address
+        // //address
 
         $report->address()->updateOrCreate(
             ["addressable_id" => $report->id],
@@ -48,7 +64,8 @@ class MissingPersonController extends Controller
              if($request->hasFile('image')){
                  $this->saveImage($report,$request->file('image'));
              }
-
+        //      //email user if authenticated and mode is add
+        $this->emailReferenceNumber($report->reference_number,"Your has been submitted","pending",$user);
          return MissingPerson::where('id',$report->id)->with(['address','image'])->first();
     }
 
@@ -82,11 +99,28 @@ class MissingPersonController extends Controller
              }
 
 
+
+    //generate unique reference number
+   public function unique_id($l = 8) {
+    return substr(md5(uniqid(mt_rand(), true)), 0, $l);
+}
+
+ public function emailReferenceNumber($ref,$message,$status,$user){
+    $data = [
+     "to" =>$user->email,
+     "reference_number"=>strtoupper($ref),
+     "message"=>$message,
+     "status" => $status
+    ];
+   $user->notify(new ReportUpdate($data));
+}
+
+
     public function destroy($id){
         return MissingPerson::destroy($id);
     }
     public function allMissing(){
-          return MissingPerson::with(['address','image'])->get();
+          return MissingPerson::with(['address','image'])->orderBy('created_at','desc')->get();
     }
 
 }

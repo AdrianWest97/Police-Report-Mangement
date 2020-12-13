@@ -1,7 +1,7 @@
 <template>
     <v-container fluid fill-height>
       <v-row align="center" justify="center">
-        <v-col cols="12" md="6" lg="7" sm="12">
+        <v-col cols="12" md="10" lg="7" sm="12">
           <v-card  outlined :loading="loader">
             <v-card-title class="headline font-weight-bolder">Create Account</v-card-title>
             <v-spacer></v-spacer>

@@ -67,6 +67,10 @@ export default new Vuex.Store({
       visible: false,
       report:null
     },
+    ApproveMissingDialog: {
+      visible: false,
+      report:null
+    },
     AllReports: [],
     MissingPersons:[]
   },
@@ -102,6 +106,10 @@ export default new Vuex.Store({
     },
     getAllReports(state) {
       return state.AllReports;
+    },
+
+    getMissingApproveDialog(state) {
+      return state.ApproveMissingDialog;
     },
     getAllMissing(state) {
       return state.MissingPersons
@@ -171,9 +179,21 @@ export default new Vuex.Store({
       state.AllReports = data;
     },
 
+        SET_MISSING_APPROVE_DIALOG(state, data) {
+      state.ApproveMissingDialog.visible = data.visible
+      state.ApproveMissingDialog.report = data.report
+    },
+
+
     EDIT_REPORT(state, payload) {
       var index = state.AllReports.findIndex(report => report.id == payload.id)
       state.AllReports[index] = payload
+    },
+
+
+        EDIT_MISSING_REPORT(state, payload) {
+      var index = state.MissingPersons.findIndex(report => report.id == payload.id)
+      state.MissingPersons[index] = payload
     },
 
     SET_ALL_MISSING(state, payload) {
@@ -208,12 +228,9 @@ export default new Vuex.Store({
              commit("SET_ALL_MISSING", res.data);
       })
     },
-
-
     editReport({ commit },report) {
       commit("EDIT_REPORT",report)
     }
+  },
 
-
-  }
 })

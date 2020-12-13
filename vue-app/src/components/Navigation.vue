@@ -21,11 +21,42 @@
           <li class="nav-item">
           <router-link v-if="!isLoggedIn" to="/register"  class="nav-link" href="#">Register</router-link>
         </li>
-         <li class="nav-item">
-          <a v-if="isLoggedIn" href="#"  class="nav-link" @click.prevent="logout()">Logout</a>
-        </li>
-           <li class="nav-item">
-          <router-link v-if="isLoggedIn" to="/profile"  class="nav-link">Settings</router-link>
+
+
+  <li v-if="isLoggedIn">
+  <div>
+    <v-menu >
+       <template v-slot:activator="{ on: menu, attrs }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="{...menu }"
+            >
+            <v-icon color="black">mdi-account-circle-outline</v-icon>
+            </v-btn>
+          </template>
+
+      <v-list dense>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          @click.prevent="menuActionClick(item.action)"
+        >
+
+           <v-list-item-content>
+          <v-list-item-title>
+            <a class="dropdown-item p-0" href="#">
+              <v-icon
+               medium
+               color="black">
+               {{item.icon}}</v-icon>&nbsp;&nbsp;&nbsp;{{ item.title }}</a>
+            </v-list-item-title>
+            </v-list-item-content>
+
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </div>
         </li>
       </ul>
     </div>
@@ -41,6 +72,15 @@ export default {
   computed: {
     ...mapGetters(['isLoggedIn'])
   },
+
+     data: () => ({
+      items: [
+        { title: 'Reports',icon:'mdi-clipboard-edit-outline',action:'reports' },
+        { title: 'Settings',icon:'mdi-account-cog-outline',action:'profile' },
+        { title: 'Logout', icon:'mdi-power',action:'logout' },
+
+      ],
+    }),
 
   methods: {
     logout () {
@@ -59,7 +99,17 @@ export default {
       }
     }
       });
-  }
+  },
+    menuActionClick(action) {
+      if (action === "logout") {
+        this.logout();
+      } else if (action === "profile") {
+        this.$router.push({path: '/profile'})
+      }else if (action === "reports") {
+        this.$router.push({path: '/report'})
+      }
+    }
+
   },
 
   mounted(){
@@ -77,4 +127,6 @@ a {
     color: grey !important;
     text-decoration: none;
 }
+
+
 </style>

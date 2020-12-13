@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\MissingPerson;
 use App\Notifications\ReportUpdate;
 use App\Report;
 use Illuminate\Http\Request;
@@ -10,9 +12,7 @@ use Exception;
 class AdminController extends Controller
 {
     public function all(){
-        $reports = Report::where('status',0)
-        ->orWhere('status',1)
-        ->with(['address','user','type','witnesses'])
+        $reports = Report::with(['address','user','type','witnesses'])
         ->orderBy('created_at','desc')
         ->get();
         return response(['reports'=>$reports]);
@@ -26,7 +26,6 @@ class AdminController extends Controller
             'message'=>'required','string',
             'userId'=>'required'
         ]);
-
         //find report
         $report = Report::find($data['id']);
 
@@ -35,15 +34,34 @@ class AdminController extends Controller
             'status'=>$data['status'],
         ]);
        $report->status = $data['status'];
-        $report->save();
-        $user = User::find($report->user->id)->first();
-        try{
+       $report->save();
+       //email authenticated user
+        $user = User::find($report->user->id);
         $this->UpdateEmail($user,$data['message'],$report->reference_number,strtolower($report->status($data['status'])));
-         return response(['success'=>true]);
-        }catch(Exception $ex){
-            return response(['success'=>false]);
+        return response(['success'=>true]);
         }
-    }
+
+        public function updateMissingPersonStatus(Request $request){
+        $data = $this->validate($request,[
+            'id'=>'required','integer',
+            'status'=>'required','integer',
+            'message'=>'required','string',
+            "headline"=>'nullable','string'
+
+        ]);
+        //find report
+      $report = MissingPerson::find($data['id']);
+       $report->status = $data['status'];
+       $report->headline = $data['headline'] ?  $data['headline']  : "";
+       $report->save();
+    //    //find user
+       $user = User::find($report->user_id);
+       var_dump($user);
+       $this->UpdateEmail($user,$data['message'],$report->reference_number,strtolower($report->status($data['status'])));
+        return response(['success'=>true]);
+        }
+
+
     public function UpdateEmail($user,$message,$ref,$status){
     $data = [
      "message"=>$message,
@@ -71,7 +89,9 @@ class AdminController extends Controller
 }
 
 public function active_users(){
-    $user = User::where('is_admin',0)->with(['address'])->get();
+    $user = User::Where('is_active',1)
+    ->Where('is_admin',0)
+    ->with(['address'])->get();
     return response(['users'=>$user]);
 }
 

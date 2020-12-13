@@ -3,8 +3,11 @@
     <v-dialog
       v-model="$store.state.TrackReportDialog.visible"
        scrollable
-        max-width="700px"
+        max-width="600px"
        overlay-color="#8c95a6"
+       keydown
+      transition="slide-y-transition"
+
 
     >
       <v-card
@@ -12,15 +15,17 @@
         <v-card-title class="headline">
 
         <v-text-field
-        v-model="search"
+        v-model="query"
         label="Enter 6 digit reference number"
         hide-details
         rounded
         :maxlength="max"
-        @input=" search = search.toUpperCase();"
+        @input="query = query.toUpperCase();"
+        v-on:keyup.enter="query != '' ? fetchReportStatus() : ''"
+
       >
         <template slot="append">
-           <v-icon v-show="search"  @click="fetchReportStatus()" medium> mdi-magnify </v-icon>
+           <v-icon v-show="query"  @click="fetchReportStatus()" medium> mdi-magnify </v-icon>
       </template>
       </v-text-field>
         </v-card-title>
@@ -31,28 +36,30 @@
         :key="result.id"
         small
         fill-dot
-       class="white--text mb-12"
-       :color="checkStatus(JSON.parse(result.data).status).color"
-
+       class="white--text"
+       :color="checkStatus(JSON.parse(result.data).status).type"
       >
-         <!-- <template v-slot:icon>
-          <small class="text-small">{{result.created_at | moment("MMM DD")}}</small><br>
-        </template> -->
-       <v-card  flat>
-        <v-card-title>{{result.created_at | moment("ddd, MMM D YYYY")}}</v-card-title>
-        <v-card-subtitle>
+              <v-alert
+               promininet
+               :color="checkStatus(JSON.parse(result.data).status).type"
+               text
+              dense
+              dark
+        border="left"
+
+             >
+        <div class="title text-dark">{{result.created_at | moment("ddd, MMM D YYYY")}}</div>
          <v-chip
-        :color="checkStatus(JSON.parse(result.data).status).color"
+        :color="checkStatus(JSON.parse(result.data).status).type"
         class="text-white"
         small
       >
        {{JSON.parse(result.data).status}}
       </v-chip>
-        </v-card-subtitle>
-        <v-card-text>
-          {{JSON.parse(result.data).message}}
-        </v-card-text>
-      </v-card>
+      <div class="text-dark my-2">
+        {{JSON.parse(result.data).message}}
+      </div>
+      </v-alert>
       </v-timeline-item>
     </v-timeline>
 
@@ -76,11 +83,10 @@
 </template>
 
 <script>
-import { integer } from 'vee-validate/dist/rules';
 import Report from "../apis/Report"
   export default {
     data:()=>({
-      search:'',
+      query:'',
       results:[],
       max:7,
       isSearching:false,
@@ -91,13 +97,13 @@ import Report from "../apis/Report"
         this.isSearching = false;
         this.results = [];
         this.empty = null;
-        this.search = '';
+        this.query = '';
         this.$store.commit("SET_TRACK_REPORT_DIALOG",false)
       },
       fetchReportStatus(){
        this.isSearching = true;
        this.empty = null;
-       Report.getStatus(this.search).then((res=>{
+       Report.getStatus(this.query).then((res=>{
          this.results = Object.values(res.data.reports);
         if(this.results.length < 1){
           this.empty = true;
@@ -112,19 +118,25 @@ if(status.toLowerCase() == "approved"){
   return {
     color:'#56a95b',
     value:'Approved',
+    type:'success'
   }
 }else if(status.toLowerCase() == "reviewing"){
  return {
-    color:'#fe9600',
     value:'Reviewing',
+    type:'warning'
   }
   }else{
     return {
-    color:'#1976d2',
     value:'Pending',
+    type:'info'
   }
   }
 },
     }
   }
 </script>
+
+
+<style scoped>
+
+</style>
