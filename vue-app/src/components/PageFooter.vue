@@ -19,9 +19,6 @@
 </template>
 <script>
 export default {
-mountes(){
-  console.log("mounted..");
-}
 }
 </script>
 

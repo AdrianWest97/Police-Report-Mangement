@@ -18,7 +18,7 @@ methods:{
   fetchStatistics(){
     Report.getParishStatistic(this.parish)
     .then((res)=>{
-      console.log(res.data)
+      // console.log(res.data)
     })
   }
 }

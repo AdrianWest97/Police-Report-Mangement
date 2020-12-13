@@ -199,7 +199,6 @@ setInteractionMode('eager');
                }
                this.form.id=this.getRespondDialog.report.id;
               this.form.userId = this.getRespondDialog.report.user.id;
-              console.log(this.form)
               Report.updateStatus(this.form).
               then((res)=>{
                 this.loading = false;

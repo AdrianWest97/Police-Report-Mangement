@@ -168,7 +168,6 @@ methods:{
    })
  },
    sendTip(rep){
-     console.log(rep)
                this.reply ="";
               this.$store.commit('SET_SNACK_BAR',{
                     visible:true,

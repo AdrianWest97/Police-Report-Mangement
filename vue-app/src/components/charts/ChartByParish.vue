@@ -33,7 +33,6 @@ export default {
 
       Charts.chartByParish()
       .then((res)=>{
-        console.log(Object.entries(res.data.data).map(data=>data[1]))
          this.chartData = {
           labels: Object.entries(res.data.data).map(data=>data[0]),
           datasets:[{

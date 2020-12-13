@@ -120,7 +120,6 @@ export default {
       this.showInfo = true
     },
     infoClicked(context) {
-      console.log(context)
     },
     getCardData(){
       Report.getCardData()
