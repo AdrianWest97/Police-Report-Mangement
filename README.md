@@ -13,8 +13,7 @@ composer install
 
 ### Database Migrations
 
-After installing composer dependencies, add your database credentials in `.env` file, run database migrations and seed database.
-
+After installing composer dependencies, add your database credentials in `.env` file, run database migrations and seed database. Also setup a mail server. For testing purpose, i will be using mailtrap.
 
 ```
 php artisan passport:install
