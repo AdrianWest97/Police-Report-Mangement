@@ -1,6 +1,6 @@
 # Laravel passport application
 
-Demo setup: **[API Token Authentication using Laravel Passport, Vue.js, Vuex](https://www.youtube.com/watch?v=UKSQdg1uPbQ)**.
+Demo setup: **[Setup video](https://www.youtube.com/watch?v=UKSQdg1uPbQ)**.
 
 ## Laravel setup
 
