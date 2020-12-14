@@ -1,6 +1,6 @@
 # Laravel passport application
 
-Demo setup: **[Setup video](https://www.youtube.com/watch?v=UKSQdg1uPbQ)**.
+Demo setup: **[Setup video](https://youtu.be/BwUieNn2IfM)**.
 
 ## Laravel setup
 
@@ -13,7 +13,11 @@ composer install
 
 ### Database Migrations
 
-After installing composer dependencies, add your database credentials in `.env` file, run database migrations and seed database. Also setup a mail server. For testing purpose, i will be using mailtrap.
+After installing composer dependencies, add your database credentials in `.env` file, generate app key, run database migrations and seed database. Also setup a mail server. For testing purpose, i will be using mailtrap.
+
+```
+php artisan key:generate 
+```
 
 ```
 php artisan passport:install
