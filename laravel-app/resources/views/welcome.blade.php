@@ -82,6 +82,7 @@
             <div class="content">
                 <div class="title m-b-md">
                     Laravel
+                    Id: {{dd(auth('api')->user())}}
                 </div>
 
                 <div class="links">

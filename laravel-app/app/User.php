@@ -6,10 +6,16 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable,HasRoles;
+
+    protected $guard_name = 'api';
+
+
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','trn',
+        'name', 'email', 'password','trn','anonymous','phoneno','gender',
     ];
 
     /**
@@ -40,5 +46,9 @@ class User extends Authenticatable
 
     public function reports(){
         return $this->hasMany(Report::class,'user_id')->with(['address','type']);
+    }
+
+    public function address(){
+                   return $this->morphOne(Address::class,'addressable');
     }
 }

@@ -1,8 +1,24 @@
 import axios from 'axios'
+import store from '../store'
+import router from "../router";
 
 let BaseApi = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: process.env.BASE_API
 })
+
+BaseApi.interceptors.response.use(
+  response => response,
+  error => {
+  if (error.response.status === 401) {
+      store.commit('LOGIN', true)
+      store.commit("AUTH_USER", null);
+      localStorage.removeItem("token");
+      router.push({ name: "Login" });
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
 
 let Api = function () {
   let token = localStorage.getItem('token')

@@ -32,13 +32,16 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY'),
+            'key' => env('PUSHER_APP_KEY','local'),
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => true,
-            ],
+                // 'encrypted' => true, //not using ssl
+                'host' => '127.0.0.1', //use local host
+                'port' => 6001,
+                'scheme' => 'http' //if use ssl use https
+        ],
         ],
 
         'redis' => [
@@ -47,7 +50,7 @@ return [
         ],
 
         'log' => [
-            'driver' => 'log',
+        'driver' => 'log',
         ],
 
         'null' => [

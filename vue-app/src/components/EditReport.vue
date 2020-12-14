@@ -8,16 +8,18 @@
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
+      transition="slide-y-transition"
+
        >
-       <v-card class="text-center p-5" v-if="getEditReport.report == null">
+       <v-card  class="text-center p-5" v-if="getEditReport.report == null">
            <v-card-text>
               Please wait...
              <v-progress-circular indeterminate></v-progress-circular>
            </v-card-text>
           </v-card>
-      <v-card v-else>
+      <v-card v-else :loading="loading">
         <v-card-title>
-          <span class="text-small text-bolder">Edit Report</span>
+          <span class="text-small text-bolder">Edit Report #{{getEditReport.report.reference_number.toUpperCase()}}</span>
         </v-card-title>
         <v-divider></v-divider>
                 <v-card-text>
@@ -25,7 +27,7 @@
             ref="observer"
             v-slot="{ invalid }"
           >
-          <form @submit.prevent="submit">
+          <form @submit.prevent="submit" ref="form">
           <v-container>
             <v-row>
                   <v-col cols="12">
@@ -241,7 +243,7 @@
             Cancel
           </v-btn>
           <v-btn
-            color="success"
+            color="primary"
             :text="false"
            :loading="loading"
             type="submit"
@@ -320,6 +322,7 @@ extend('required', {
        }
      },
      submit(){
+       this.loading = true;
      var form = {
        type:this.getEditReport.report.type.type,
        parish:this.getEditReport.report.address.parish,
@@ -328,17 +331,18 @@ extend('required', {
        details:this.getEditReport.report.details,
        additional:this.getEditReport.report.additional,
        hasWitness:this.getEditReport.report.hasWitness,
-       witnesses:this.getEditReport.report.witnesses,
+       witnesses:JSON.stringify(this.getEditReport.report.witnesses),
        date:this.getEditReport.report.date
      }
       Report.update(form,this.getEditReport.report.id)
       .then((res) => {
+               this.loading = false;
         this.closeDialog();
             this.$store.commit('SET_SNACK_BAR',{
             visible:true,
             content:"Update success"
              })
-      });
+      }).catch((err)=>        this.loading = true)
      },
      		formatDate(date) {
 			if (!date) return null;
@@ -353,12 +357,15 @@ extend('required', {
 			return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
         },
 
-          closeDialog(){
+      closeDialog(){
+       this.loading = false;
+      this.$refs.form.reset()
+       this.$refs.observer.reset()
           this.$store.commit('SET_EDIT_REPORT_DIALOG',{
           report:null,
           visible:false
         })
-          }
+     },
 
 
    },

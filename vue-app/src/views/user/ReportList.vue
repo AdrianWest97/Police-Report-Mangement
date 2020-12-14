@@ -1,7 +1,8 @@
 <template>
+    <v-container>
         <v-row>
            <v-col cols="12" >
-    <v-sheet color="grey" v-if="firstLoad" :loading="loading">
+    <v-sheet  v-if="firstLoad" :loading="loading">
         <v-skeleton-loader class="mx-auto" type="table"></v-skeleton-loader>
     </v-sheet>
   <v-card outlined>
@@ -16,6 +17,7 @@
       <v-chip
         :color="checkStatus(item.status).color"
         class="text-white"
+        small
       >
        {{checkStatus(item.status).value}}
       </v-chip>
@@ -38,7 +40,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -46,22 +48,22 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-
-
                 <v-icon
-                small
+                medium
                 class="mr-2"
-                 slot="a"
                  @click="editItem(item)"
+                 :disabled="item.status == 2"
                 >
-             mdi-pencil
+             mdi-pencil-outline
                </v-icon>
 
       <v-icon
-        small
+        medium
         @click="deleteItem(item)"
+       :disabled="item.status == 2"
+
       >
-        mdi-delete
+        mdi-delete-outline
       </v-icon>
     </template>
 
@@ -80,6 +82,7 @@
   <snack-bar/>
   <edit-report/>
   </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -89,63 +92,52 @@ import SnackBar from '../../components/SnackBar.vue';
 export default {
   data () {
       return {
-
-            loading:true,
-            firstLoad:true,
-             dialog: false,
+      loading:true,
+      firstLoad:true,
+      dialog: false,
       dialogDelete: false,
      headers: [
-        {
-          text: 'Date',
-          align: 'start',
-          sortable: false,
-          value: 'date',
-        },
+        {text: 'Date',align: 'start',sortable: false,value: 'date'},
         { text: 'id', value: 'id', align:'d-none' },
         { text: 'Reference #',  value: 'reference_number' },
         { text: 'Type', value: 'type' },
         { text: 'Status', value: 'status' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-        reports: [],
+      reports: [],
       editedIndex: -1,
       editedItem: {
         date: '',
-        reference_number: 0,
-        type: 0,
-        status: 0,
-        id:0
+        reference_number: "",
+        type: "",
+        status: "",
+        id:""
       },
       defaultItem: {
         date: '',
-        reference_number: 0,
-        type: 0,
-        status: 0,
+        reference_number: "",
+        type: "",
+        status: "",
         id:0
       },
       }
     },
   methods:{
     fetchReports(){
-      this.reports = [];
-      Report.reports()
+      return Report.reports()
       .then((res)=>{
              res.data.reports.forEach(report =>{
                 this.reports = [...this.reports, {
                 id:report.id,
                 date: report.date,
-                reference_number: report.reference_number,
+                reference_number: report.reference_number.toUpperCase(),
                 type: report.type.type,
                 status: report.status,
                 }]
             });
-                    setTimeout(() => {
+            setTimeout(() => {
           if (this.firstLoad) this.firstLoad = false
           this.loading = false;
-        //   resolve({
-        //     items,
-        //     total,
-        //   });
         }, 1000);
       });
 
@@ -167,21 +159,15 @@ export default {
       },
 
        deleteItemConfirm () {
-        Report.delete(this.reports[this.editedIndex].id)
+       Report.delete(this.reports[this.editedIndex].id)
         .then((res)=>{
-            if(res.data.deleted){
+          this.reports.splice(this.editedIndex,1);
+          this.editedIndex = -1;
                 this.$store.commit('SET_SNACK_BAR',{
                     visible:true,
-                    content:"Item deleted"
+                    content:"Item deleted",
+                    timeout:2000
                 })
-                this.fetchReports();
-            }else{
-            this.$store.commit('SET_SNACK_BAR',{
-            visible:true,
-            content:"Sorry, could not delete item."
-                })
-            }
-
         })
         this.closeDelete()
       },
@@ -209,7 +195,7 @@ if(status == 2){
         this.dialogDelete = false
         this.$nextTick(() => {
           this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
+          // this.editedIndex = -1
         })
       },
   },

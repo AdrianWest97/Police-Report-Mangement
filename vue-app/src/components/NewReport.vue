@@ -2,14 +2,17 @@
 <div>
   <v-row justify="center">
     <v-dialog v-model="reportDialog.dialog"
-       scrollable max-width="800px"
+       scrollable max-width="750px"
        style="z-index:9999"
        overlay-color="#8c95a6"
        persistent
+       transition="slide-y-transition"
        >
-      <v-card>
+      <v-card :loading="loading">
         <v-card-title>
-          <span class="text-small text-bolder">New Police Report</span>
+          <span class="text-small text-bolder">Quick Report</span>
+          <v-spacer></v-spacer>
+
         </v-card-title>
         <v-divider></v-divider>
                 <v-card-text>
@@ -17,7 +20,7 @@
             ref="observer"
             v-slot="{ invalid }"
           >
-          <form @submit.prevent="submit">
+          <v-form ref="form" @submit.prevent="submit">
           <v-container>
             <v-row>
                   <v-col cols="12">
@@ -33,9 +36,9 @@
 											<v-select
 												:items="reportTypes.map(type => type.type)"
 												v-model="form.type"
+                         slot-scope="{ errors }"
+                        :error-messages="errors"
 												label="Select Report Type"
-												slot-scope="{ errors }"
-												:error-messages="errors"
 												required
 											></v-select>
 										</validation-provider>
@@ -45,31 +48,34 @@
                 sm="6"
                 md="6"
               >
-                     <v-menu
-											v-model="menu"
-											:close-on-content-click="false"
-											transition="scale-transition"
-											offset-y
-										>
-											<template v-slot:activator="{ on, attrs }">
-												<v-text-field
-													v-model="computedDateFormatted"
-													label="When did this happen?"
-													hint="MM/DD/YYYY format"
-													persistent-hint
-													prepend-icon="mdi-calendar"
-													readonly
-
-													v-bind="attrs"
-													v-on="on"
-												></v-text-field>
-											</template>
-											<v-date-picker
-												v-model="form.date"
-												no-title
-												@input="menu = false"
-											></v-date-picker>
-										</v-menu>
+      <v-menu
+        v-model="menu2"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+        <validation-provider  name="date" rules="required">
+          <v-text-field
+            v-model="form.date"
+            label="Date of inccident"
+            prepend-icon="mdi-calendar"
+            readonly
+						required
+            slot-scope="{ errors }"
+            :error-messages="errors"
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+                </validation-provider>
+        </template>
+        <v-date-picker
+          v-model="form.date"
+          @input="menu2 = false"
+        ></v-date-picker>
+      </v-menu>
               </v-col>
 
                   </v-row>
@@ -80,7 +86,7 @@
 
               <v-col cols="12">
                 <v-card flat style="margin:0 !important">
-                  <v-card-title>Location</v-card-title>
+                  <v-card-subtitle>Location</v-card-subtitle>
                   <v-card-title>
                     <v-row>
                       <v-col
@@ -92,8 +98,8 @@
 												:items="parishes"
 												v-model="form.parish"
 												label="Select Parish"
-												slot-scope="{ errors }"
-												:error-messages="errors"
+                        slot-scope="{ errors }"
+                        :error-messages="errors"
 												required
 											></v-select>
 										</validation-provider>
@@ -107,7 +113,6 @@
 											<v-text-field
 												label="City"
 												v-model="form.city"
-
 												hide-details="auto"
 												slot-scope="{ errors }"
 												:error-messages="errors"
@@ -126,7 +131,7 @@
 												v-model="form.street"
 												hide-details="auto"
 												slot-scope="{ errors }"
-												:error-messages="errors"
+                        :error-messages="errors"
 												required
 											></v-text-field>
 										</validation-provider>
@@ -138,35 +143,35 @@
 
               <v-col cols="12">
                 <v-card flat>
-                  <v-card-title>Description of inciddent</v-card-title>
+                  <v-card-subtitle>Description of inciddent</v-card-subtitle>
                   <v-card-title>
                     <v-row>
                       <v-col
                       cols="12">
-                      	<validation-provider name="details" rules="required">
+                <validation-provider name="details" rules="required">
                    <v-textarea
-                    :rules="textAreaRules"
                     counter
                     rows="2"
                      row-height="50"
                     auto-grow
+                    slot-scope="{ errors }"
+                    :error-messages="errors"
                     label="Details"
+                   filled
                     class="mt-1"
                     v-model="form.details"
-                    	slot-scope="{ errors }"
-												:error-messages="errors"
-												required
+										required
                   ></v-textarea>
-                      	</validation-provider>
+              	</validation-provider>
                       </v-col>
                       <v-col cols="12">
                    <v-checkbox
                   v-model="form.hasWitness"
-                  :label="'Where there any witneeses to the inccident? '"
+                  :label="'Were there any witneeses to the inccident? '"
                   class="m-0 p-0"
                 ></v-checkbox>
 
-                      <ul v-show="form.hasWitness && form.witnesses.length > 0" class="list-group m-0 mb-2 p-0" v-for="(witness,index) in form.witnesses" :key="index">
+                      <ul v-show="form.hasWitness && temp_witnesses.length > 0" class="list-group m-0 mb-2 p-0" v-for="(witness,index) in temp_witnesses" :key="index">
                           <transition name="fade">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                          <span class="text-bold">{{witness.name.toUpperCase()}}</span>
@@ -192,7 +197,6 @@
                         v-model="temp_name"
 												hide-details="auto"
                         class="m-1"
-
 											></v-text-field>
 										</validation-provider>
                      	<validation-provider name="Phone no.">
@@ -209,29 +213,28 @@
 
               </v-col>
                <v-col
-                      cols="12">
+                 cols="12">
                 <v-textarea
-                    :rules="textAreaRules"
                     counter
                     rows="2"
                      row-height="50"
                     auto-grow
+                    filled
                     label="Additional information"
                     class="mt-1"
                     v-model="form.additional"
                   ></v-textarea>
                       </v-col>
-                  <v-col col="12">
-                    <v-divider></v-divider>
-                    <v-checkbox v-model="form.accepted_terms">
-      <template v-slot:label>
-        <div>
-          By clicking submit, you certify that all the given information
-is true and correct.
-        </div>
-      </template>
-    </v-checkbox>
-                  </v-col>
+                  	<validation-provider class="mx-4" name="Accepted terms" rules="required">
+                    <v-checkbox required
+                    	slot-scope="{ errors }"
+                        :error-messages="errors"
+                        v-model="form.accepted_terms">
+                    <template v-slot:label>
+                         By clicking submit, you certify that all the given information is true and correct.
+                        </template>
+                      </v-checkbox>
+                  	</validation-provider>
                     </v-row>
                   </v-card-title>
                 </v-card>
@@ -243,22 +246,21 @@ is true and correct.
           <v-btn
             color="blue darken-1"
             text
-           @click="$store.commit('SET_REPORT_DIALOG',false)"
+           @click="closeDialog()"
           >
             Cancel
           </v-btn>
           <v-btn
-            color="blue darken-1"
-            :text="!invalid && form.accepted_terms ? false : true"
+            color="primary"
            :loading="loading"
             type="submit"
-            :disabled="!invalid && form.accepted_terms ? false : true"
+            :disabled="invalid"
             @click.prevent="submit()"
           >
-          Submit
+          Submit Report
           </v-btn>
         </v-card-actions>
-        </form>
+        </v-form>
    </validation-observer>
   </v-card-text>
       </v-card>
@@ -271,9 +273,9 @@ is true and correct.
 <script>
 import Report from '../apis/Report'
 import Api from '../apis/Api';
-import { required, email, max } from 'vee-validate/dist/rules'
+import { required, max } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-import { mapGetters,mapMutations } from 'vuex'
+import { mapGetters} from 'vuex'
 import SuccessModal from '../components/successModal.vue';
 
 
@@ -288,17 +290,14 @@ extend('required', {
     message: '{_field_} may not be greater than {length} characters',
   })
 
-  extend('email', {
-    ...email,
-    message: 'Email must be valid',
-  })
 
   export default {
    data:()=>{
      return{
       loading: false,
+      menu2:false,
        form:{
-        date: new Date().toISOString().substr(0, 10),
+      date: new Date().toISOString().substr(0, 10),
         now:false,
         parish:'',
         city:'',
@@ -308,20 +307,17 @@ extend('required', {
         accepted_terms:false,
         hasWitness:false,
         witnesses:[],
-        additional:''
+        additional:'',
        },
+      temp_witnesses:[],
        temp_name:'',
        temp_phone:'',
-       textAreaRules:[v=> v.length <= 1000 || 'Max 250 chracters'],
       	menu: false,
 
      }
    },
    computed:{
      ...mapGetters(['reportTypes','parishes','reportDialog']),
-     computedDateFormatted() {
-			return this.formatDate(this.form.date);
-    },
    },
    methods:{
      deleteWitness(index){
@@ -329,7 +325,7 @@ extend('required', {
      },
      addWitness(){
        if(this.temp_name != "" && this.temp_phone !=""){
-         this.form.witnesses = [...this.form.witnesses,{
+         this.temp_witnesses = [...this.temp_witnesses,{
            name:this.temp_name,
            phone:this.temp_phone
          }]
@@ -337,36 +333,33 @@ extend('required', {
          this.temp_phone ="";
        }
      },
+     closeDialog(){
+      this.loading = false;
+      this.$refs.form.reset()
+       this.temp_witnesses = [];
+       this.$store.commit('SET_REPORT_DIALOG',false)
+     },
      submit(){
       this.loading = true;
        this.$refs.observer.validate();
-        Api().post("/create",this.form)
+       if(this.temp_witnesses.length > 0){
+         this.form.witnesses = JSON.stringify(this.temp_witnesses)
+       }
+        Api().post("/report/create",this.form)
         .then((response) => {
+          this.loading = false;
+          //close form
+          //show success
           this.$store.commit('SET_SUCCESS_DIALOG',{
           content:response.data.reference_number,
           message:'Your report has been submmited for review and approval. Save this reference number to track your report.',
           visible:true,
           title:'Success'
         });
+          this.closeDialog();
         })
-           this.loading = false;
-           this.$store.commit('SET_REPORT_DIALOG',false)
-            this.$refs.observer.clear();
      },
-     		formatDate(date) {
-			if (!date) return null;
-
-			const [year, month, day] = date.split("-");
-			return `${month}/${day}/${year}`;
-		},
-		parseDate(date) {
-			if (!date) return null;
-
-			const [month, day, year] = date.split("/");
-			return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-        },
    },
-
    created(){
      Report.reportTypes().then(res => this.$store.commit('REPORT_TYPES',res.data.types));
    },
