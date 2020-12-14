@@ -26,7 +26,7 @@
 
 
     <template v-slot:no-data>
-     <no-data :btnClickHandler="getActiveUsers"></no-data>
+     <no-data :btnClickHandler="getUsers"></no-data>
     </template>
       </v-data-table>
     </v-card-text>

@@ -77,7 +77,7 @@
     </template>
 
     <template v-slot:no-data>
-<no-data :btnClickHandler="$store.dispatch('fetchAllReports')"></no-data>
+<no-data :btnClickHandler="fetchReports"></no-data>
     </template>
   </v-data-table>
     </v-card-text>
@@ -114,6 +114,8 @@ export default {
 
   methods:{
     fetchReports(){
+       this.$store.dispatch('fetchAllReports');
+
       if(this.pending != null){
         setTimeout(() => {
           if (this.firstLoad) this.firstLoad = false
@@ -161,7 +163,6 @@ computed:{
 },
 
 created(){
- this.$store.dispatch('fetchAllReports');
  this.fetchReports();
 },
 

@@ -186,7 +186,7 @@ public function emailReferenceNumber($ref,$message,$status,$user){
     }
 
         public function chartByParish(){
-         $data = Report::where('status',0)->with('address')->get()->pluck('address.parish')->toArray();
+         $data = Report::with('address')->get()->pluck('address.parish')->toArray();
         $parishes = [
         "Hanover",
         "St. Elizabeth",

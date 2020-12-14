@@ -19,9 +19,11 @@ After installing composer dependencies, add your database credentials in `.env` 
 ```
 php artisan passport:install
 ```
+```
 php artisan migrate
 ```
 Seed the database to create the different report types, admin account and guest user account
+
 ```
 php artisan db:seed
 ```
@@ -34,7 +36,6 @@ Now, in the terminal run
 php artisan serve
 ```
 This command will run the application at `http://127.0.0.1:8000` URL, and that URL path used in the Vue.js app.
-
 
 ```
 php artisan websockets:serve
@@ -49,6 +50,7 @@ This will allow us to add emails to a queue.
 
 
 Admin account credentials
+
 ```
 email: admin@prms.com
 password: prmsadmin
